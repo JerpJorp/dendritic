@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "dendritic-kb": {
+      "hosting": {
+        "dendritic": [
+          "dendritic-kb"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "dendritic-kb"
+  }
+}
