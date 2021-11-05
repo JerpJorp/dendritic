@@ -1,4 +1,5 @@
 export const environment = {
+  production: true,
   firebase: {
     projectId: 'dendritic-kb',
     appId: '1:899168659633:web:ec655982429797ed835a90',
@@ -7,6 +8,6 @@ export const environment = {
     authDomain: 'dendritic-kb.firebaseapp.com',
     messagingSenderId: '899168659633',
     measurementId: 'G-0JHNSVW9KH',
-  },
-  production: true
+  }
+  
 };

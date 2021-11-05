@@ -1,0 +1,22 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div *ngIf="projects.length > 0; else noProject" class="card" style="width: 18rem;">
+                <div class="card-header">
+                  Projects
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li *ngFor="let p of projects" class="list-group-item d-grid">
+                    <button type="button" (click)="SelectProject(p)"                         
+                        class="btn-sm btn">{{p.name}}</button>  
+
+                  </li>
+                </ul> 
+              </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #noProject>
+    <h6> No project selected or found</h6>
+</ng-template>
