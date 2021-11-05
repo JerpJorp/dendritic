@@ -28,6 +28,12 @@
         </li> -->
       </ul>
       <div class="d-flex">
+        <span class="navbar-text mx-3">
+          {{dirtyObjectCount}}
+        </span>
+        
+      </div>
+      <div class="d-flex">
 
         <img *ngIf="(user | async)?.photoURL" referrerpolicy="no-referrer" [src]="(user | async)?.photoURL" class="user ">
         <button (click)="login()" class="btn btn-outline-success mx-2"  *ngIf="showLoginButton">Sign In</button>

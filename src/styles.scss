@@ -2,3 +2,27 @@
 
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/dist/css/bootstrap.css";
+
+.list-group {
+    max-height: 50vh;
+    margin-bottom: 10px;
+    overflow: auto;
+  }
+  
+  .list-group-item {
+    padding-top: 0.2rem;
+    padding-right: 0.18rem;
+    padding-bottom: 0.18rem;
+    padding-left: 0.2rem;  
+    border: none;
+  }
+  
+  .breadcrumb {
+    font-size: small;
+  }
+  
+  pre {
+    background-color: #404040;
+    color: #cccccc;
+    padding: 20px;
+  }

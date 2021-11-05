@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2">
-            <div *ngIf="project; else noProject" class="card" style="width: 18rem;">
+            <div *ngIf="project; else noProject" class="card">
                 <div class="card-header">
                   {{project.name}}
                 </div>
@@ -15,28 +15,26 @@
                 <ul class="list-group list-group-flush">
                     <li *ngFor="let s of project.situations" class="list-group-item">{{s.name}}</li>
                   </ul>
-  
               </div>
-
         </div>
         <div class="col-md-6">
-            <ngx-graph *ngIf="graph"
-            class="chart-container"
-            [view]="[3000, 3000]"
-            [links]="graph.edges"          
-            layout="dagre" 
-            [nodes]="graph.nodes"
-            [draggingEnabled]="false"
-            [layoutSettings]="{
-              orientation: 'TB',
-              marginX: 10,
-              marginY: 10,
-              edgePadding: 10,
-              rankPadding: 10,
-              nodePadding: 20,
-              multigraph: true,
-              compound: true} ">
-  
+          <ngx-graph *ngIf="graph"
+                class="chart-container"
+                [view]="[3000, 3000]"
+                [links]="graph.edges"          
+                layout="dagre" 
+                [nodes]="graph.nodes"
+                [draggingEnabled]="false"
+                [layoutSettings]="{
+                orientation: 'TB',
+                marginX: 10,
+                marginY: 10,
+                edgePadding: 10,
+                rankPadding: 10,
+                nodePadding: 20,
+                multigraph: true,
+                compound: true} ">
+    
               <ng-template #defsTemplate>
                 <svg:marker id="EndMarker" viewBox="0 0 8 8" refX="4" refY="4"
                     markerUnits="strokeWidth"
@@ -81,7 +79,16 @@
             </ng-template>
   
           </ngx-graph>
+        </div>
+        <div *ngIf="selectedUnit" class="col-md-4">
 
+            <div [ngSwitch]="selectedUnit.type">
+                <app-situation-quick-edit *ngSwitchCase="'situation'"></app-situation-quick-edit>
+                <app-possibility-quick-edit *ngSwitchCase="'possibility'"></app-possibility-quick-edit>
+                <app-action-quick-edit *ngSwitchCase="'action'"></app-action-quick-edit>
+                 
+
+            </div>
         </div>
     </div>
 </div>

@@ -19,6 +19,6 @@ export abstract class BaseUnit {
          this.name = dto && dto.name ? dto.name : '';
          this.id = dto && dto.id ? dto.id : Common.NewID();
          this.metadata = dto && dto.metadata ? dto.metadata : []
-         this.dirty = dto ? false : true;
+         this.dirty = dto && dto.dirty ? dto.dirty : true;
     }
 }

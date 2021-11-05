@@ -9,4 +9,13 @@ export class ActionCondition extends BaseUnit {
         super(dto);
         this.action = dto && dto.action ? new Action(dto.action) : undefined;
     }
+
+    DirtyCount(): number {
+        let count  = this.dirty ? 1 : 0;
+        if (this.action) {
+            count += this.action.DirtyCount();
+        }
+        return count;
+    }
+
 }

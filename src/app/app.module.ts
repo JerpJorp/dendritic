@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,16 +18,27 @@ import { AvailableProjectsComponent } from './available-projects/available-proje
 import { ProjectViewComponent } from './project-view/project-view.component';
 import { NewProjectComponent } from './new-project/new-project.component';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
+import { ProjectQuickEditComponent } from './project-quick-edit/project-quick-edit.component';
+import { SituationQuickEditComponent } from './situation-quick-edit/situation-quick-edit.component';
+import { PossibilityQuickEditComponent } from './possibility-quick-edit/possibility-quick-edit.component';
+import { ActionQuickEditComponent } from './action-quick-edit/action-quick-edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AvailableProjectsComponent,
     ProjectViewComponent,
-    NewProjectComponent
+    NewProjectComponent,
+    ProjectQuickEditComponent,
+    SituationQuickEditComponent,
+    PossibilityQuickEditComponent,
+    ActionQuickEditComponent
   ],
   imports: [
+    CommonModule,
+    FormsModule,
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     NgxGraphModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),

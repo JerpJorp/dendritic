@@ -9,7 +9,10 @@ export class Possibility extends BaseUnit {
         this.actions = dto && dto.actions ? dto.actions.map(a => new Action(a)) : [];
     }
 
-    get Actions(): Action[] {
-        return this.actions  || [];
+    DirtyCount(): number {
+        let count  = this.dirty ? 1 : 0;
+        this.actions.forEach(a => count += a.DirtyCount());
+        return count;
     }
+
 }

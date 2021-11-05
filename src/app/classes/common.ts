@@ -1,5 +1,6 @@
 
 import * as uuid from 'uuid';
+import { BaseUnit } from './base-unit';
 
 export class Common {
     static NewID() : string {
@@ -8,5 +9,9 @@ export class Common {
 }
 
 export type MetadataType = 'link' | 'comment' | 'code' | 'table';
+export type BuType = 'situation' | 'possibility' | 'action';
 
 
+export class SelectedUnit {
+    constructor(public baseUnit: BaseUnit, public type: BuType) {}
+}

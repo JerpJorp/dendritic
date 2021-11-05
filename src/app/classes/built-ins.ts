@@ -15,13 +15,15 @@ export class BuiltIns {
                 id: 'DefaultEDF',
                 concretion: 'code',
                 situations: [
-                    {name: 'Click one', Initial: true, metadata: [
-                        {type: 'comment', description: 'This is a comment', content: 'Like I said this is a comment'},
-                        {type: 'link', description: 'Narcissistic reference', content: 'https://dendritic-kb.web.app/'}
-                    ]}
+                    {name: 'Click one', initial: true,
+                        metadata: [
+                            {type: 'comment', description: 'This is a comment', content: 'Like I said this is a comment'},
+                            {type: 'link', description: 'Narcissistic reference', content: 'https://dendritic-kb.web.app/'}
+                        ],
+                    possibilityIds: ['PA']}
                 ],
                 possibilities: [ 
-                    new Possibility({name: 'Possibility A', actions: [
+                    new Possibility({name: 'Possibility A', id: 'PA', actions: [
                         new Action({name: 'A1', conditions: [
                             new ActionCondition({name: 'if A', action: new Action({name: 'A1.1' })}),
                             new ActionCondition({name: 'if B', action: new Action({name: 'A1.2' })}),

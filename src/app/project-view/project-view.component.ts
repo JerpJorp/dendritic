@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Edge, Node, ClusterNode } from '@swimlane/ngx-graph';
+import { SelectedUnit } from '../classes/common';
 
 import { Project } from '../classes/project';
 import { ProjectToGraph } from '../classes/project-to-graph';
@@ -16,6 +17,8 @@ export class ProjectViewComponent implements OnInit {
 
   projectId: string | undefined = '';
   project: Project | undefined = undefined;
+
+  selectedUnit: SelectedUnit | undefined;
 
   graph: ProjectToGraph | undefined;
 
@@ -34,10 +37,14 @@ export class ProjectViewComponent implements OnInit {
       this.project = x;
       this.graph = this.project ? new ProjectToGraph(this.project) : undefined;
     });
+
+    this.controller.currentUnit$.subscribe(x => this.selectedUnit = x);
   
   }
 
   NodeClick(node: Node) {
+
+    this.controller.Select(node.data, node.meta.type);
 
     // if (node.id === 'application') {
     //   this.SetSticky(undefined);
