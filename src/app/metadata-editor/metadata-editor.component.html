@@ -1,1 +1,72 @@
-<p>metadata-editor works!</p>
+<!-- 
+    selectedUnit: SelectedUnit | undefined;
+    selectedUnit.baseUnit
+
+    allowedMetaDataTypes: MetadataType[] | undefined;
+        export type MetadataType = 'link' | 'comment' | 'code' | 'table'; -->
+
+<div *ngIf="selectedUnit && concretion?.allowedMetadataTypes">
+
+    <div class="alert alert-primary" role="alert">Information</div>
+
+    <h6 class="card-title">Details for {{selectedUnit?.baseUnit?.name}}</h6>
+
+    <div *ngIf="!readOnly">
+
+        <div *ngFor="let mt of concretion?.allowedMetadataTypes" class="card">
+            <div class="card-body"> 
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div class="card-header">{{mt}}</div>
+                    </div>
+                    <div class="col-sm-2 d-grid">
+                        <button type="button" (click)="AddMetadata(mt)" class="btn btn-outline-secondary btn-sm my-3">Add {{mt}}</button>
+                    </div>
+                </div>
+
+                <div *ngFor="let meta of groupedMetadata[mt]; let i = index" class="form-group row">
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" [(ngModel)]="meta.description"
+                            (ngModelChange)="valueChanged($event)" [attr.list]="'Other' + mt + 'Descriptions'"
+                            placeholder="Add Description...">
+                        <datalist [attr.list]="'Other' + mt + 'Descriptions'">
+                            <!-- <option *ngFor="let sd of snippetsDescriptions">{{sd}}</option> -->
+                        </datalist>
+
+                        <textarea type="text" class="form-control" id="idField" [(ngModel)]="meta.content"
+                            placeholder="Add content..." (ngModelChange)="valueChanged($event)"></textarea>
+
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" (click)="RemoveMetadata(meta.id)"
+                            class="btn-sm btn btn-outline-danger btn-block">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div *ngIf="readOnly">
+        <div  *ngFor="let mt of concretion?.allowedMetadataTypes" class="card">
+            <div class="card-body">
+                <div class="card-header" *ngIf="groupedMetadata[mt]">{{mt}}</div>
+                
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let m of groupedMetadata[mt]">
+                        <span *ngIf="mt === 'comment'">{{m.content}}</span>
+
+                        <label *ngIf="mt === 'code'">{{m.description}}</label>
+                        <pre *ngIf="mt === 'code'">{{m.content}}</pre>
+
+                        <label  *ngIf="mt === 'link'">{{m.description}}</label>
+                        <a  *ngIf="mt === 'link'" class="mx-2" href="{{m.content}}">{{m.content}}</a>
+
+                    </li>
+    
+                </ul>
+            </div>
+        </div>
+
+</div>

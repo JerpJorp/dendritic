@@ -1,7 +1,12 @@
-import { MetadataType } from "./common";
+import { Common, MetadataType } from "./common";
 
 export class Metadata {
-    type: MetadataType = 'comment';
+    
+    id: string;
     description = '';
     content = '';
+
+    constructor(public type: MetadataType) {
+        this.id = Common.NewID();
+    }
 }

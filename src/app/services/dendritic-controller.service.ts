@@ -38,6 +38,9 @@ export class DendriticControllerService {
   }
   
   RefreshAvailableProjects() {
+
+    this.concretions$.next(BuiltIns.DefaultConcretions);
+    
     this.indexDbSvc.SavedProjects$.subscribe(idbProjectTrackList => {
       let projectList = BuiltIns.DefaultProjects.map(x =>  (new ProjectTrack(x.name, x.id, 'default')));
       projectList.push(... idbProjectTrackList);
