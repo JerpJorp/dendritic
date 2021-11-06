@@ -9,7 +9,7 @@ export class Common {
 }
 
 export type MetadataType = 'link' | 'comment' | 'code' | 'table';
-export type BuType = 'situation' | 'possibility' | 'action';
+export type BuType = 'situation' | 'possibility' | 'action' | 'condition';
 
 
 export class SelectedUnit {

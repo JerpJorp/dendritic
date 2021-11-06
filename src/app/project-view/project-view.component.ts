@@ -44,7 +44,12 @@ export class ProjectViewComponent implements OnInit {
 
   NodeClick(node: Node) {
 
-    this.controller.Select(node.data, node.meta.type);
+    if (node.id === ProjectToGraph.RootID) {
+      this.controller.currentUnit$.next(undefined);
+    } else {
+      this.controller.Select(node.data, node.meta.type);
+    }
+    
 
     // if (node.id === 'application') {
     //   this.SetSticky(undefined);

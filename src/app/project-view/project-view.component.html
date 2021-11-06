@@ -1,22 +1,5 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
-            <div *ngIf="project; else noProject" class="card">
-                <div class="card-header">
-                  {{project.name}}
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">{{project.concretion}}</li>
-                </ul>
-                <div class="card-header">
-                    Situations
-                </div>
-
-                <ul class="list-group list-group-flush">
-                    <li *ngFor="let s of project.situations" class="list-group-item">{{s.name}}</li>
-                  </ul>
-              </div>
-        </div>
         <div class="col-md-6">
           <ngx-graph *ngIf="graph"
                 class="chart-container"
@@ -27,11 +10,11 @@
                 [draggingEnabled]="false"
                 [layoutSettings]="{
                 orientation: 'TB',
-                marginX: 10,
-                marginY: 10,
-                edgePadding: 10,
-                rankPadding: 10,
-                nodePadding: 20,
+                marginX: 15,
+                marginY: 15,
+                edgePadding: 15,
+                rankPadding: 15,
+                nodePadding: 25,
                 multigraph: true,
                 compound: true} ">
     
@@ -80,16 +63,16 @@
   
           </ngx-graph>
         </div>
-        <div *ngIf="selectedUnit" class="col-md-4">
+        <div *ngIf="selectedUnit" class="col-md-6">
 
             <div [ngSwitch]="selectedUnit.type">
                 <app-situation-quick-edit *ngSwitchCase="'situation'"></app-situation-quick-edit>
                 <app-possibility-quick-edit *ngSwitchCase="'possibility'"></app-possibility-quick-edit>
-                <app-action-quick-edit *ngSwitchCase="'action'"></app-action-quick-edit>
-                 
-
+                <app-action-quick-edit *ngSwitchCase="'action'"></app-action-quick-edit>                                
             </div>
         </div>
+
+        <app-project-quick-edit *ngIf="!selectedUnit" class="col-md-6"></app-project-quick-edit>
     </div>
 </div>
 

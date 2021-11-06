@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { Auth, authState, signInAnonymously, signOut, User, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { traceUntilFirst } from '@angular/fire/performance';
 import { DendriticControllerService } from './services/dendritic-controller.service';
+import { Project } from './classes/project';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit, OnDestroy{
   dirtyObjectCount = 0;
   showLoginButton = false;
   showLogoutButton = false;
+  projectName = '';
 
   constructor(@Optional() private auth: Auth, private controller: DendriticControllerService) {
     if (auth) {
@@ -37,6 +39,13 @@ export class AppComponent implements OnInit, OnDestroy{
 
   ngOnInit() {
     this.controller.dirtyObjectCount$.subscribe(x => this.dirtyObjectCount = x);
+    this.controller.currentProject$.subscribe(x => {
+      setTimeout(() => {
+        this.projectName = x ? x.name : '';
+        console.log(this.projectName);        
+      }, 0);
+      
+    });
   }
 
   log(msg: string) {

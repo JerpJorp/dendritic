@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Action } from '../classes/action';
+import { ActionCondition } from '../classes/action-condition';
 import { BaseUnit } from '../classes/base-unit';
 import { BuiltIns } from '../classes/built-ins';
 import { BuType, Common, SelectedUnit } from '../classes/common';
@@ -15,7 +16,7 @@ import { IndexedDbService } from './indexed-db.service';
   providedIn: 'root'
 })
 export class DendriticControllerService {
-  
+      
   AvailableProjects$: BehaviorSubject<ProjectTrack[]> = new BehaviorSubject<ProjectTrack[]>([]);
   currentProject$: BehaviorSubject<Project | undefined> = new BehaviorSubject<Project | undefined>(undefined);
 
@@ -51,6 +52,19 @@ export class DendriticControllerService {
       .filter(x => x !== undefined) as Possibility[];
   }
 
+  AddInitialSituation(tempSituationName: any) {
+    this.currentProject$.value?.situations.push(new Situation({name: tempSituationName, initial: true}));
+    this.Republish();
+  }
+
+  RemoveInitialSituation(s: Situation) {
+
+    if (this.currentProject$.value) {
+      this.currentProject$.value.situations = this.currentProject$.value.situations.filter(x => x.id !== s.id);
+      this.Republish();
+    }
+  }
+  
   AddPossibility(situation: Situation, tempPossibilityName: string) {
     situation.dirty = true;
     const p = new Possibility({name: tempPossibilityName});
@@ -84,6 +98,22 @@ export class DendriticControllerService {
     possibility.dirty = true;
     possibility.actions = possibility.actions.filter(x => x.id !== a.id);
     this.Republish();
+  }
+
+  RemoveCondition(action: Action, c: ActionCondition) {
+    action.dirty = true;
+    action.conditions = action.conditions.filter(x => x.id !== c.id)
+    this.Republish();
+  }
+
+  AddCondition(parentAction: Action, conditionName: string, actionName: string): ActionCondition {
+
+    const newCondition = new ActionCondition({name: conditionName});
+    newCondition.action = new Action({name: actionName});
+    parentAction.conditions.push(newCondition);
+    this.Republish();
+    return newCondition;
+    
   }
 
   Republish() {
