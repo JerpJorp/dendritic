@@ -1,22 +1,23 @@
 import { Component, OnInit } from '@angular/core';
+import { BaseQuickEditComponent } from '../base-quick-edit/base-quick-edit.component';
 import { Project } from '../classes/project';
 import { Situation } from '../classes/situation';
 import { DendriticControllerService } from '../services/dendritic-controller.service';
+
 @Component({
   selector: 'app-project-quick-edit',
   templateUrl: './project-quick-edit.component.html',
   styleUrls: ['./project-quick-edit.component.scss']
 })
-export class ProjectQuickEditComponent implements OnInit {
-
-  
+export class ProjectQuickEditComponent extends BaseQuickEditComponent implements OnInit {
                   
-  readOnly = false;
   project: Project | undefined;
   tempSituationName = '';
 
   situations: Situation[] | undefined;
-  constructor(private controller: DendriticControllerService) { };
+  constructor(controller: DendriticControllerService) {
+    super(controller);
+   };
 
   ngOnInit(): void {
 

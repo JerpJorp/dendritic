@@ -48,6 +48,10 @@ export class AppComponent implements OnInit, OnDestroy{
     });
   }
 
+  ToggleReadOnly() {
+    this.controller.readonly$.next(!this.controller.readonly$.value);
+  }
+
   log(msg: string) {
     console.log(msg);
   }

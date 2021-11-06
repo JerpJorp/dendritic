@@ -7,10 +7,7 @@ import { Situation } from "./situation";
 
 export class BuiltIns {
 
-    static get DefaultProjects(): Project[] {
-        
-        return [
-            new Project({
+    static codeProject: Project = new Project({
                 name: 'Example Code Flow',
                 id: 'DefaultEDF',
                 concretion: 'code',
@@ -34,7 +31,11 @@ export class BuiltIns {
 
                     })
                 ]
-            })
+            });
+    static get DefaultProjects(): Project[] {
+        
+        return [
+            this.codeProject
 
         ];
     }

@@ -19,6 +19,10 @@
             <li><a class="dropdown-item" [routerLink]="['/view', 'FakeId']">View Fake Project</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" [routerLink]="['/new']">New  Project</a></li>
+            <li><hr class="dropdown-divider"></li>
+
+            <li><a class="dropdown-item" href="javascript:void(0)" (click)="ToggleReadOnly()">Toggle Read-only Mode</a></li>
+
           </ul>
         </li>
 

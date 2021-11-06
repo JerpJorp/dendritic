@@ -16,8 +16,9 @@ import { IndexedDbService } from './indexed-db.service';
   providedIn: 'root'
 })
 export class DendriticControllerService {
-      
-  AvailableProjects$: BehaviorSubject<ProjectTrack[]> = new BehaviorSubject<ProjectTrack[]>([]);
+
+  
+  availableProjects$: BehaviorSubject<ProjectTrack[]> = new BehaviorSubject<ProjectTrack[]>([]);
   currentProject$: BehaviorSubject<Project | undefined> = new BehaviorSubject<Project | undefined>(undefined);
 
   concretions$: BehaviorSubject<Concretion[]> = new BehaviorSubject<Concretion[]>([]);
@@ -25,6 +26,8 @@ export class DendriticControllerService {
   currentUnit$: BehaviorSubject<SelectedUnit | undefined> = new BehaviorSubject<SelectedUnit | undefined>(undefined);
   dirtyObjectCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
+  readonly$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  
   constructor(private indexDbSvc: IndexedDbService) {     
     this.RefreshAvailableProjects();    
 
@@ -38,12 +41,12 @@ export class DendriticControllerService {
     this.indexDbSvc.SavedProjects$.subscribe(idbProjectTrackList => {
       let projectList = BuiltIns.DefaultProjects.map(x =>  (new ProjectTrack(x.name, x.id, 'default')));
       projectList.push(... idbProjectTrackList);
-      this.AvailableProjects$.next(projectList);
+      this.availableProjects$.next(projectList);
     });
   }
 
   LoadProjectId(id: string) {
-      this.LoadProject(this.AvailableProjects$.value.find(x => x.id === id));
+      this.LoadProject(this.availableProjects$.value.find(x => x.id === id));
   }
 
   PossibilitiesFor(situation: Situation): Possibility[] {
@@ -135,8 +138,12 @@ export class DendriticControllerService {
     this.currentUnit$.next({baseUnit: bu, type: type});
   }
 
-  AddDirt(bu: BaseUnit) {
+  AddDirt(bu: BaseUnit, skipRepublish?: boolean) {
     bu.dirty = true;    
+
+    if (!skipRepublish) {
+      this.Republish();
+    } 
   }
 
   DirtyCheck() {

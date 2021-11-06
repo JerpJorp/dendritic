@@ -1,6 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
+          <!-- orientation: 'TB', -->
           <ngx-graph *ngIf="graph"
                 class="chart-container"
                 [view]="[3000, 3000]"
@@ -9,7 +10,7 @@
                 [nodes]="graph.nodes"
                 [draggingEnabled]="false"
                 [layoutSettings]="{
-                orientation: 'TB',
+                
                 marginX: 15,
                 marginY: 15,
                 edgePadding: 15,
@@ -63,7 +64,7 @@
   
           </ngx-graph>
         </div>
-        <div *ngIf="selectedUnit" class="col-md-6">
+        <div *ngIf="selectedUnit" class="col-md-3">
 
             <div [ngSwitch]="selectedUnit.type">
                 <app-situation-quick-edit *ngSwitchCase="'situation'"></app-situation-quick-edit>
@@ -72,7 +73,11 @@
             </div>
         </div>
 
-        <app-project-quick-edit *ngIf="!selectedUnit" class="col-md-6"></app-project-quick-edit>
+        <app-project-quick-edit *ngIf="!selectedUnit" class="col-md-3"></app-project-quick-edit>
+
+        <div *ngIf="selectedUnit" class="col-md-3">
+          <app-metadata-editor></app-metadata-editor>
+        </div>
     </div>
 </div>
 

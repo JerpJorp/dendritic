@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { filter } from 'rxjs/operators';
+import { BaseQuickEditComponent } from '../base-quick-edit/base-quick-edit.component';
 import { Action } from '../classes/action';
 import { Possibility } from '../classes/possibility';
 import { DendriticControllerService } from '../services/dendritic-controller.service';
@@ -9,13 +10,14 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
   templateUrl: './possibility-quick-edit.component.html',
   styleUrls: ['./possibility-quick-edit.component.scss']
 })
-export class PossibilityQuickEditComponent implements OnInit {
+export class PossibilityQuickEditComponent extends BaseQuickEditComponent implements OnInit {
 
-  readOnly = false;
   tempActionName = '';
   possibility: Possibility | undefined;
 
-  constructor(private controller: DendriticControllerService) { };
+  constructor(controller: DendriticControllerService) { 
+    super(controller);
+  };
 
   ngOnInit(): void {
     this.controller.currentUnit$.pipe(filter(x => x?.type === 'possibility')).subscribe(x => {

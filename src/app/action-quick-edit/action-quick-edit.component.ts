@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { filter } from 'rxjs/operators';
+import { BaseQuickEditComponent } from '../base-quick-edit/base-quick-edit.component';
 import { Action } from '../classes/action';
 import { ActionCondition } from '../classes/action-condition';
 import { DendriticControllerService } from '../services/dendritic-controller.service';
@@ -9,14 +10,15 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
   templateUrl: './action-quick-edit.component.html',
   styleUrls: ['./action-quick-edit.component.scss']
 })
-export class ActionQuickEditComponent implements OnInit {
+export class ActionQuickEditComponent extends BaseQuickEditComponent implements OnInit {
 
   lineMode = true;
-  readOnly = false;
   tempActionName = '';
   action: Action | undefined;
 
-  constructor(private controller: DendriticControllerService) { };
+  constructor(controller: DendriticControllerService) { 
+    super(controller);
+  };
 
   ngOnInit(): void {
     this.controller.currentUnit$.pipe(filter(x => x?.type === 'action')).subscribe(x => {

@@ -22,6 +22,8 @@ import { ProjectQuickEditComponent } from './project-quick-edit/project-quick-ed
 import { SituationQuickEditComponent } from './situation-quick-edit/situation-quick-edit.component';
 import { PossibilityQuickEditComponent } from './possibility-quick-edit/possibility-quick-edit.component';
 import { ActionQuickEditComponent } from './action-quick-edit/action-quick-edit.component';
+import { MetadataEditorComponent } from './metadata-editor/metadata-editor.component';
+import { BaseQuickEditComponent } from './base-quick-edit/base-quick-edit.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { ActionQuickEditComponent } from './action-quick-edit/action-quick-edit.
     ProjectQuickEditComponent,
     SituationQuickEditComponent,
     PossibilityQuickEditComponent,
-    ActionQuickEditComponent
+    ActionQuickEditComponent,
+    MetadataEditorComponent,
+    BaseQuickEditComponent
   ],
   imports: [
     CommonModule,
