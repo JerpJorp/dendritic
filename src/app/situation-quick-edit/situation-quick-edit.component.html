@@ -1,5 +1,5 @@
 <div *ngIf="situation">
-    <div class="alert alert-primary" role="alert">Situation:</div>
+    <div class="alert alert-info" role="alert">Situation:</div>
   
     <input *ngIf="!readOnly;" type="text" type="text" class="form-control" id="nameField" [(ngModel)]="situation.name" (ngModelChange)="nameValueChanged($event)">  
     <button *ngIf="readOnly" class="btn-sm btn btn-outline-primary">{{situation?.name}}</button>

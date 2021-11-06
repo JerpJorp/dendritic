@@ -8,14 +8,10 @@ import { Situation } from './situation';
 
 export class ProjectToGraph {
 
-    static readonly SituationColor = "#cfe2ff";
-    static readonly PossibilityColor = "#bfd2df";
-    static readonly ActionGraphColor =  "#afafbf";
-
     static readonly ColorLkp: {[index: string]: string;} = {
-        'situation': "#cfe2ff",
-        'possibility': "#bfd2df",        
-        'action': "#afc2bf",
+        'situation': "#5dbecd",
+        'possibility': "#4dd0af",        
+        'action': "#ee8277",
         'condition': "#dff2ff",
     };
 

@@ -11,7 +11,7 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
 })
 export class ActionQuickEditComponent implements OnInit {
 
-
+  lineMode = true;
   readOnly = false;
   tempActionName = '';
   action: Action | undefined;
@@ -30,6 +30,11 @@ export class ActionQuickEditComponent implements OnInit {
     }
   }
 
+  ToggleLineMode() {
+    this.lineMode = !this.lineMode;
+  }
+
+
   nameValueChanged(newValue: string) {
     this.controller.AddDirt(this.action as Action);
     // add dirt?
@@ -42,7 +47,11 @@ export class ActionQuickEditComponent implements OnInit {
     const action  = parts.length === 1 ? parts[0] : parts[1];
 
     const newCondition =  this.controller.AddCondition(this.action as Action, condition, action);
-    this.Select(newCondition);
+
+    if (this.lineMode) {
+      this.Select(newCondition);
+    }
+    
     this.tempActionName = '';
   }
 

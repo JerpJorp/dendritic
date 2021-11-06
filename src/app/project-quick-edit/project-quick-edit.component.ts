@@ -9,6 +9,8 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
 })
 export class ProjectQuickEditComponent implements OnInit {
 
+  
+                  
   readOnly = false;
   project: Project | undefined;
   tempSituationName = '';
