@@ -12,10 +12,6 @@ export class Situation extends BaseUnit {
         this.initial = dto && dto.initial ? dto.initial : false;
     }
 
-    get PossibilityIds(): string[] {
-        return this.possibilityIds  || [];
-    }
-
     get Initial(): boolean {
         return this.initial === undefined ? false : this.initial;
     }

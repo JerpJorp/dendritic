@@ -6,7 +6,7 @@ import { Possibility } from './possibility';
 import { Project } from './project';
 import { Situation } from './situation';
 
-export class ProjectToGraph {
+export class ProjectToGraphDeprecated {
 
     static readonly ColorLkp: {[index: string]: string;} = {
         'situation': "#5dbecd",
@@ -15,20 +15,20 @@ export class ProjectToGraph {
         'condition': "#dff2ff",
     };
 
-    static readonly RootID = 'rootID'
+    static readonly RootID = 'rootID';
     edges: Edge[] = [];
     nodes: Node[] = [];
 
     constructor(private project: Project) {
         // Create root node
-        this.nodes.push({id: ProjectToGraph.RootID, label: 'Flows', data: undefined, meta: {color: "#BBBBBB"}});
-        project.situations.filter(x => x.initial).forEach(x => this.processSituation(x, ProjectToGraph.RootID));
+        this.nodes.push({id: ProjectToGraphDeprecated.RootID, label: 'Flows', data: undefined, meta: {color: "#BBBBBB"}});
+        project.situations.filter(x => x.initial).forEach(x => this.processSituation(x, ProjectToGraphDeprecated.RootID));
     }
 
     processSituation(bu: Situation, parentId: string) {
         this.addNodeEdge(bu.id, parentId, bu.name, 'situation', bu);
 
-        bu.PossibilityIds.map(pid => this.project.possibilities.find(x => x.id === pid))
+        bu.possibilityIds.map(pid => this.project.possibilities.find(x => x.id === pid))
         .filter(x => x !== undefined)
         .map(x => x as Possibility)
         .forEach(possibility => {
@@ -57,7 +57,7 @@ export class ProjectToGraph {
 
     private addNodeEdge(targetId: string, parentId: string, name: string, type: BuType, data: any): {node: Node, edge: Edge} {
 
-        const color = ProjectToGraph.ColorLkp[type];
+        const color = ProjectToGraphDeprecated.ColorLkp[type];
         const node = {id: targetId, label: name, data: data, meta: {color: color, type: type}};
         this.nodes.push(node);
         const edge = {id: `${parentId}${targetId}`, source: parentId, target: targetId};

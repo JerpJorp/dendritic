@@ -1,14 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from '../app.module';
-import { DendriticControllerService } from '../services/dendritic-controller.service';
-import { IndexedDbService } from '../services/indexed-db.service';
 
-import { NewProjectComponent } from './new-project.component';
+import { ProjectCanvasViewComponent } from './project-canvas-view.component';
 
-describe('NewProjectComponent', () => {
-  let component: NewProjectComponent;
-  let fixture: ComponentFixture<NewProjectComponent>;
+describe('ProjectCanvasViewComponent', () => {
+  let component: ProjectCanvasViewComponent;
+  let fixture: ComponentFixture<ProjectCanvasViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,14 +14,13 @@ describe('NewProjectComponent', () => {
         AppModule,
         RouterTestingModule.withRoutes([])
       ],
-      providers: [DendriticControllerService, IndexedDbService],
-      declarations: [ NewProjectComponent ]
+      declarations: [ ProjectCanvasViewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NewProjectComponent);
+    fixture = TestBed.createComponent(ProjectCanvasViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

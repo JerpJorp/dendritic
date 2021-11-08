@@ -50,7 +50,7 @@ export class BuiltIns {
                 pluralPossibilityName: 'triggers',
                 actionName: 'step',
                 pluralActionName: 'steps',
-                allowedMetadataTypes: ['comment', 'link']   
+                allowedMetadataTypes: ['comment', 'link', 'code']   
             },
             {
                 name: 'Knowledge Notes',
@@ -60,7 +60,7 @@ export class BuiltIns {
                 pluralPossibilityName: 'Areas',
                 actionName: 'item',
                 pluralActionName: 'item',
-                allowedMetadataTypes: ['comment', 'code', 'link']   
+                allowedMetadataTypes: ['comment', 'link']   
             }
         ];
     }

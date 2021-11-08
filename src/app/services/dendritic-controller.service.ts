@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
 import { Action } from '../classes/action';
 import { ActionCondition } from '../classes/action-condition';
 import { BaseUnit } from '../classes/base-unit';
@@ -27,29 +26,42 @@ export class DendriticControllerService {
   dirtyObjectCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   readonly$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  Initialized$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  lastProjectId: string | undefined;
   
   constructor(private indexDbSvc: IndexedDbService) {     
-    this.RefreshAvailableProjects();    
+
+    this.concretions$.next(BuiltIns.DefaultConcretions);
 
     this.currentProject$.subscribe( p => {      
       this.currentConcretion$.next (p ? this.concretions$.value.find(x => x.name === p.concretion) : undefined);
     });
-    
-  }
-  
-  RefreshAvailableProjects() {
 
-    this.concretions$.next(BuiltIns.DefaultConcretions);
-    
     this.indexDbSvc.SavedProjects$.subscribe(idbProjectTrackList => {
       let projectList = BuiltIns.DefaultProjects.map(x =>  (new ProjectTrack(x.name, x.id, 'default')));
       projectList.push(... idbProjectTrackList);
       this.availableProjects$.next(projectList);
+      if (this.lastProjectId && this.currentProject$.value?.id !== this.lastProjectId) {
+        this.LoadProjectId(this.lastProjectId);
+      }
     });
+    
+    this.indexDbSvc.Initialized$.subscribe(x => this.checkReady());
+    
+  }
+
+  checkReady() {
+    const ready = this.indexDbSvc.Initialized$.value; // AND with any other things that need to be initialized
+
+    if (ready !== this.Initialized$.value) {
+      this.Initialized$.next(ready);
+    }
   }
 
   LoadProjectId(id: string) {
-      this.LoadProject(this.availableProjects$.value.find(x => x.id === id));
+    this.lastProjectId = id;
+    this.LoadProject(this.availableProjects$.value.find(x => x.id === id));
   }
 
   PossibilitiesFor(situation: Situation): Possibility[] {
@@ -64,7 +76,6 @@ export class DendriticControllerService {
   }
 
   RemoveInitialSituation(s: Situation) {
-
     if (this.currentProject$.value) {
       this.currentProject$.value.situations = this.currentProject$.value.situations.filter(x => x.id !== s.id);
       this.Republish();

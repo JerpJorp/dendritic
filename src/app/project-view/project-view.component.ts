@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Edge, Node, ClusterNode } from '@swimlane/ngx-graph';
+import { Node } from '@swimlane/ngx-graph';
 import { SelectedUnit } from '../classes/common';
 
 import { Project } from '../classes/project';
-import { ProjectToGraph } from '../classes/project-to-graph';
+import { ProjectToGraphDeprecated } from '../classes/project-to-graph';
 import { DendriticControllerService } from '../services/dendritic-controller.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class ProjectViewComponent implements OnInit {
 
   selectedUnit: SelectedUnit | undefined;
 
-  graph: ProjectToGraph | undefined;
+  graph: ProjectToGraphDeprecated | undefined;
 
   constructor(private route: ActivatedRoute, private controller: DendriticControllerService) { }
 
@@ -35,7 +35,7 @@ export class ProjectViewComponent implements OnInit {
 
     this.controller.currentProject$.subscribe(x => {
       this.project = x;
-      this.graph = this.project ? new ProjectToGraph(this.project) : undefined;
+      this.graph = this.project ? new ProjectToGraphDeprecated(this.project) : undefined;
     });
 
     this.controller.currentUnit$.subscribe(x => this.selectedUnit = x);
@@ -44,7 +44,7 @@ export class ProjectViewComponent implements OnInit {
 
   NodeClick(node: Node) {
 
-    if (node.id === ProjectToGraph.RootID) {
+    if (node.id === ProjectToGraphDeprecated.RootID) {
       this.controller.currentUnit$.next(undefined);
     } else {
       this.controller.Select(node.data, node.meta.type);

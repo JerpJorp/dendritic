@@ -11,18 +11,30 @@ export class IndexedDbService {
 
   readonly PREFIX = '_Dendritic.';
   
-  SavedProjects$: BehaviorSubject<ProjectTrack[]> = new BehaviorSubject<ProjectTrack[]>([]);
+SavedProjects$: BehaviorSubject<ProjectTrack[]> = new BehaviorSubject<ProjectTrack[]>([]);
+Initialized$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private storage: StorageMap) { 
     this.RefreshKeys();
   }
 
   GetProject(pTrack: ProjectTrack): Observable<Project> {
-    const name = `${pTrack.name}::${pTrack.id}`;    
+    const name = `${pTrack.name}::${pTrack.id}`;
     return this.storage.get(`${this.PREFIX}${name}`).pipe(map(x => x as Project));
   }
 
-  
+  Save(p: Project) {
+
+    const name = `${p.name}::${p.id}`;
+
+    this.storage.set(`${this.PREFIX}${name}`, p).subscribe({
+      next: () => {
+        this.RefreshKeys();
+      },
+      error: (error) => {},
+    });
+    
+  }
 
   RefreshKeys() {
     const keys: string[] = [];
@@ -38,6 +50,10 @@ export class IndexedDbService {
               const parts = x.split('::');
               return new ProjectTrack(parts[0], parts[1], 'indexedDb')
             }));
+
+        if (this.Initialized$.value === false) {
+          this.Initialized$.next(true);
+        }
       },
     });    
   }

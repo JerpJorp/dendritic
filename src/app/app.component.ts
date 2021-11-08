@@ -23,6 +23,7 @@ export class AppComponent implements OnInit, OnDestroy{
   showLogoutButton = false;
   projectName = '';
 
+  ready = false;
   constructor(@Optional() private auth: Auth, private controller: DendriticControllerService) {
     if (auth) {
       this.user = authState(this.auth);
@@ -43,9 +44,10 @@ export class AppComponent implements OnInit, OnDestroy{
       setTimeout(() => {
         this.projectName = x ? x.name : '';
         console.log(this.projectName);        
-      }, 0);
-      
+      }, 0);      
     });
+
+    this.controller.Initialized$.subscribe(x => this.ready = x);
   }
 
   ToggleReadOnly() {
