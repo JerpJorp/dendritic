@@ -34,7 +34,7 @@ export class ProjectToDagre {
             
                 displayName: 'flows',
                 color: 'white',                 
-                width: 120, height: 40});
+                width: 90, height: 30});
 
         // Process initial situations, which kicks off everything else 
         project.situations.filter(x => x.initial).forEach(x => this.processSituation(x, ProjectToDagre.RootID));

@@ -30,13 +30,12 @@
                   *ngIf="tempActionName && tempActionName.length > 0"
                   (click)="AddCondition()"
                   class="btn btn-outline-secondary btn-sm">+</button> 
-  
               </li>
             </ul>
           </div>
         </div>
 
-        <div class="row">
+        <div *ngIf="!readOnly" class="row">
             <div class="col">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"  [checked]="lineMode"

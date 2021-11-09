@@ -4,7 +4,6 @@ import { AvailableProjectsComponent } from './available-projects/available-proje
 import { CanvasTestComponent } from './canvas-test/canvas-test.component';
 import { NewProjectComponent } from './new-project/new-project.component';
 import { ProjectCanvasViewComponent } from './project-canvas-view/project-canvas-view.component';
-import { ProjectViewComponent } from './project-view/project-view.component';
 
 const routes: Routes = [
   { path: 'available', component: AvailableProjectsComponent },

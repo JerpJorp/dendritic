@@ -27,16 +27,12 @@ export class BuiltIns {
                             new ActionCondition({name: 'if C', action: new Action({name: 'A1.3' })}),
                             new ActionCondition({name: 'if D', action: new Action({name: 'A1.4' })})
                         ]})
-                    ]
-
-                    })
+                    ]})
                 ]
             });
     static get DefaultProjects(): Project[] {
-        
         return [
             this.codeProject
-
         ];
     }
 
@@ -50,7 +46,7 @@ export class BuiltIns {
                 pluralPossibilityName: 'triggers',
                 actionName: 'step',
                 pluralActionName: 'steps',
-                allowedMetadataTypes: ['comment', 'link', 'code']   
+                allowedMetadataTypes: ['comment', 'code', 'link']   
             },
             {
                 name: 'Knowledge Notes',

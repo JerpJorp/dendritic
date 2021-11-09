@@ -43,10 +43,7 @@ additional predefined types can be added to each concretion if it makes sense.
  *  abstract classes will have display names that match the concept (see map examples above)
  *  metadata types are defined as to those that are allowed and how they are displayed. For examplee, 'Code' Concretions can have metatdata types of 'snippet', which are displayed as code blocks.  
  
- 
- 
- 
- 
+
 
 # Technical notes
 ## Development server

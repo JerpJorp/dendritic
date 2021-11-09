@@ -15,7 +15,6 @@ import { getAnalytics, provideAnalytics } from '@angular/fire/analytics';
 
 import { environment } from '../environments/environment';
 import { AvailableProjectsComponent } from './available-projects/available-projects.component';
-import { ProjectViewComponent } from './project-view/project-view.component';
 import { NewProjectComponent } from './new-project/new-project.component';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { ProjectQuickEditComponent } from './project-quick-edit/project-quick-edit.component';
@@ -31,7 +30,6 @@ import { ProjectCanvasViewComponent } from './project-canvas-view/project-canvas
   declarations: [
     AppComponent,
     AvailableProjectsComponent,
-    ProjectViewComponent,
     NewProjectComponent,
     ProjectQuickEditComponent,
     SituationQuickEditComponent,

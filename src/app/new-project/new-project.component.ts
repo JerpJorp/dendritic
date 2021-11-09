@@ -12,7 +12,9 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
 import { IndexedDbService } from '../services/indexed-db.service';
 
 import * as faker from 'faker'
-
+import { BaseUnit } from '../classes/base-unit';
+import { Metadata } from '../classes/metadata';
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-new-project',
@@ -49,7 +51,8 @@ export class NewProjectComponent extends BaseQuickEditComponent implements OnIni
 
   FakeUpProject(project: Project) {
 
-    project.situations = Array(this.getRandomInt(2,4)).fill(0).map(idx => {
+    
+    project.situations = Array(this.getRandomInt(2,7)).fill(0).map(idx => {
       return new Situation({ name: faker.name.findName(), initial: true});
     });
 
@@ -58,6 +61,7 @@ export class NewProjectComponent extends BaseQuickEditComponent implements OnIni
 
   FakeUpSituation(project: Project, situation: Situation) {
     
+    this.FakeUpMetadata(situation);
     const possibilities = Array(this.getRandomInt(1,3)).fill(0).map(idx => {
       const newP = new Possibility({name: faker.name.findName()});
       this.FakeUpPossibility(newP);
@@ -69,8 +73,47 @@ export class NewProjectComponent extends BaseQuickEditComponent implements OnIni
 
   }
 
+  FakeUpMetadata(baseUnit: BaseUnit) {
+
+    const list: Metadata[] = [];
+
+    const commentMD = new Metadata('comment');
+    commentMD.content = faker.lorem.sentences(2);
+    list.push(commentMD);
+    
+    Array(3).fill(0).forEach((x, idx) => {
+      const linkMD = new Metadata('link');
+      linkMD.description = 'Generate class command in angular';
+      linkMD.content = 'https://angular.io/cli/generate#class-command';
+      list.push(linkMD);
+  
+    });
+
+    const codeMD = new Metadata('code');
+    codeMD.description = "example snippet";
+    codeMD.content = `export interface RectProps {
+      type: string | Types;
+      width: number;
+      height: number;
+      x: number;
+      y: number;
+      text?: TextProps;
+      paddingLeft?: number;
+      paddingRight?: number;
+      borderWidth?: number;
+      backgroundColor?: string;
+      borderColor?: string;
+      borderRadius?: number | string;
+      opacity?: number;
+  }`;
+  list.push(codeMD);
+
+  baseUnit.metadata = list;
+}
+
   FakeUpPossibility(possibility: Possibility) {
 
+    this.FakeUpMetadata(possibility);
     possibility.actions = Array(this.getRandomInt(2,4)).fill(0).map(idx => {
       const newAction = new Action({name: faker.name.findName()});
       this.FakeUpAction(newAction, 0);
@@ -80,16 +123,18 @@ export class NewProjectComponent extends BaseQuickEditComponent implements OnIni
 
   FakeUpAction(a: Action, depth: number) {
     
-    a.conditions = Array(this.getRandomInt(1,3)).fill(0).map(idx => {
-      const newCondition = new ActionCondition({name: `if ${idx}`});
-      newCondition.action = new Action({name: faker.name.findName()});
-    
-      if (depth < 4) {
+    this.FakeUpMetadata(a);
+
+    if (depth < 7) {
+      a.conditions = Array(this.getRandomInt(1,3)).fill(0).map(idx => {
+        const newCondition = new ActionCondition({name: `if ${idx}`});
+        newCondition.action = new Action({name: faker.name.findName()});
         this.FakeUpAction(newCondition.action, ++depth);
-      }
-      
-      return newCondition;
-    });
+        return newCondition;
+      });
+
+    }
+
   }
 
   getRandomInt(min: number, max: number) : number {
