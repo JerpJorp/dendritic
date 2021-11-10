@@ -1,0 +1,10 @@
+<div class="canvas-container">
+    <canvas #myCanvas 
+        (mousedown)="canvasMouseDown($event)" 
+        (mouseup)="drag=false" 
+        (wheel)="canvasWheel($event)"
+        (mousemove)="canvasMouseMove($event)"
+        (mouseleave)="drag=false"
+        (click)="canvasMouseClick($event)"
+        width="2500" height="3500"></canvas>
+</div>

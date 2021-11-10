@@ -19,12 +19,15 @@ export class FirestoreService {
 
   constructor(private fireStore: Firestore) { 
 
-    const col = collection(fireStore, 'projects');
+    // const col = collection(fireStore, 'projects');
     
-    collectionData(col).subscribe(x => {
-      this.actualProjects$.next(x as Project[]);
-      this.projects$.next(this.actualProjects$.value.map(p => ({name: p.name, id: p.id, source: 'fireStore'})))
-    });
+    // collectionData(col).subscribe(x => {
+    //   this.actualProjects$.next(x as Project[]);
+    //   this.projects$.next(this.actualProjects$.value.map(p => ({name: p.name, id: p.id, source: 'fireStore'})))
+    // });
+
+    this.projects$.next([]);
+    this.actualProjects$.next([]);
 
   }
 

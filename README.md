@@ -46,11 +46,30 @@ additional predefined types can be added to each concretion if it makes sense.
 
 
 # Technical notes
+
 ## Development server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+Run `ng build ngx-canvas-graph --watch` to build/watch ngx-canvas-graph
+In another command shell, run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng test` in another command shell to also see test results with changes.
 
 ## Code scaffolding
+
+### components
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+Run `ng generate component component-name  --project=ngx-canvas-graph` to generate a new component in ngx-canvas-graph. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module  --project=ngx-canvas-graph`.
+
+### services
+
+Run `ng generate service services/service-name` to generate a new service. 
+Run `ng generate service services/service-name --project=ngx-canvas-graph` to generate a new service in ngx-canvas-graph. 
+
+
+### classes
+Run `ng generate class classes/class-name` to generate a new class. 
+Run `ng generate class class-name --project=ngx-canvas-graph` to generate a new class in ngx-canvas-graph. 
+
 
 
 ## Build

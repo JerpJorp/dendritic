@@ -12,7 +12,10 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
 import * as dagre from "dagre";
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { CanvasHelper } from '../classes/canvas-helper';
+import { CanvasHelper, NgxCanvasGraphService } from 'ngx-canvas-graph';
+import { ProjectToCanvasGraph } from '../classes/project-to-canvas-graph';
+import { BaseUnit } from '../classes/base-unit';
+
 
 @Component({
   selector: 'app-project-canvas-view',
@@ -41,12 +44,9 @@ export class ProjectCanvasViewComponent implements OnInit {
 
   moveDebounce: Subject<MouseEvent> = new Subject<MouseEvent>();
 
-  constructor(private route: ActivatedRoute, private controller: DendriticControllerService) { }
+  constructor(private route: ActivatedRoute, private controller: DendriticControllerService, private graphSvc: NgxCanvasGraphService) { }
 
   ngOnInit(): void {
-
-    this.ctx = this.canvas?.nativeElement.getContext('2d');
-
     this.route.params.subscribe(routeParams => {
       this.projectId = routeParams.projectId;
       this.controller.LoadProjectId(this.projectId || '');
@@ -54,15 +54,44 @@ export class ProjectCanvasViewComponent implements OnInit {
 
     this.controller.currentProject$.subscribe(x => {
       this.project = x;
-      this.graph = this.project ? new ProjectToDagre(this.project) : undefined;
-      if (this.graph && this.ctx) { this.Draw(this.graph, this.ctx); }
+      if (this.project) {
+        const builder = ProjectToCanvasGraph.Build(this.project);
+        this.graphSvc.RenderBuilder(builder);
+      }
+     
     });
 
+    this.graphSvc.nodeClick$.subscribe(x => {
+      if (x?.properties?.selectedUnit) {
+        this.controller.currentUnit$.next(x.properties.selectedUnit as SelectedUnit);
+      } else {
+        this.controller.currentUnit$.next(undefined);
+      }
+    });
     this.controller.currentUnit$.subscribe(x => this.selectedUnit = x);
     this.controller.readonly$.subscribe(x => this.readOnly = x);
-
-    this.moveDebounce.pipe(debounceTime(1)).subscribe(x => this.debounceMouseMove(x))
   }
+
+  // ngOnInit(): void {
+
+  //   this.ctx = this.canvas?.nativeElement.getContext('2d');
+
+  //   this.route.params.subscribe(routeParams => {
+  //     this.projectId = routeParams.projectId;
+  //     this.controller.LoadProjectId(this.projectId || '');
+  //   });
+
+  //   this.controller.currentProject$.subscribe(x => {
+  //     this.project = x;
+  //     this.graph = this.project ? new ProjectToDagre(this.project) : undefined;
+  //     if (this.graph && this.ctx) { this.Draw(this.graph, this.ctx); }
+  //   });
+
+  //   this.controller.currentUnit$.subscribe(x => this.selectedUnit = x);
+  //   this.controller.readonly$.subscribe(x => this.readOnly = x);
+
+  //   this.moveDebounce.pipe(debounceTime(1)).subscribe(x => this.debounceMouseMove(x))
+  // }
 
   Draw(graph: ProjectToDagre, ctx: CanvasRenderingContext2D) {
 
@@ -72,7 +101,6 @@ export class ProjectCanvasViewComponent implements OnInit {
       const txfrm = this.ctx.getTransform();
 
       this.ctx?.clearRect(0, 0, element.width, element.height);
-      //this.ctx?.clearRect(0 - txfrm.e, 0 - txfrm.f, element.width * 2, element.height * 2);
 
       ctx.shadowColor = '#AAAAAA';
       ctx.shadowBlur = 10;
@@ -177,56 +205,7 @@ export class ProjectCanvasViewComponent implements OnInit {
     }
   }
 
-  canvasMouseDownOLD(event: MouseEvent) {
-
-    if (this.canvas && this.ctx) {
-
-      const element = this.canvas.nativeElement as HTMLCanvasElement;
-      const bcr = element.getBoundingClientRect();
-      let txfrm = this.ctx.getTransform();
-      //txfrm = txfrm.invertSelf();
-      const offsetLeft = element.offsetLeft || 0;
-      const offSetTop = element.offsetTop || 0;
-
-      // apply to point:
-      const xVal = (event.pageX * txfrm.a) - bcr.x -  txfrm.e;
-      const yVal = (event.pageY * txfrm.d) - bcr.y -  txfrm.f;
-
-      console.log('---');
-      console.log(`client x/y => [${this.abt(event.clientX)},${this.abt(event.clientY)}]`);
-      console.log(`page x/y => [${this.abt(event.pageX)},${this.abt(event.pageY)}]`);
-      console.log(`bcr x/y => [${this.abt(bcr.x)},${this.abt(bcr.y)}]`);
-      console.log(`bcr width/height => [${this.abt(bcr.width)},${this.abt(bcr.height)}]`);
-
-      console.log(`txfrm scale x/y => [${this.abt(txfrm.a)},${this.abt(txfrm.d)}]`);
-
-      console.log(`txfrm translate x/y => [${this.abt(txfrm.e)},${this.abt(txfrm.f)}]`);
-
-      
-      // const xVal = event.pageX - bcr.x + txfrm.e;
-      // const yVal = event.pageY - bcr.y + txfrm.f;
-
-      console.log(`xval[${xVal}] yval[${yVal}]`)
-      if (this.graph) {
-        const matching = this.graph.nodes.find(n => n.x < xVal && xVal < n.x + n.width && n.y < yVal && yVal < n.y + n.height);
-        if (matching) {
-
-          if (matching.bu) {
-            this.controller.Select(matching.bu, matching.type);
-          } else {
-            this.controller.currentUnit$.next(undefined);
-          }
-        }
-      }
-
-      this.dragStart = {
-        x: event.pageX - element.offsetLeft,
-        y: event.pageY - element.offsetTop
-      }
-
-      this.drag = true;
-    }
-  }
+ 
 
   canvasMouseClick(event: MouseEvent) {
     this.drag = false;

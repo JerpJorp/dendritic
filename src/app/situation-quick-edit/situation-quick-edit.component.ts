@@ -28,7 +28,6 @@ export class SituationQuickEditComponent extends BaseQuickEditComponent implemen
     });
   }
 
-
   Select(p: Possibility) {
     this.controller.Select(p, 'possibility');
   }

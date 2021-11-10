@@ -21,7 +21,6 @@ export class CanvasHelper {
       }
 
     static MouseToCanvas(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, event: MouseEvent): {x: number, y: number} {
-
         return this.GetCanvasCoords(ctx, this.MouseXY(canvas, event))
     }
 }
