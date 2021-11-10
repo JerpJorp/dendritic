@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { filter } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import { BaseQuickEditComponent } from '../base-quick-edit/base-quick-edit.component';
 import { Action } from '../classes/action';
 import { Possibility } from '../classes/possibility';
@@ -23,6 +23,8 @@ export class PossibilityQuickEditComponent extends BaseQuickEditComponent implem
     this.controller.currentUnit$.pipe(filter(x => x?.type === 'possibility')).subscribe(x => {
       this.possibility = x?.baseUnit as Possibility
     });
+
+    this.changeDebounce.pipe(debounceTime(300)).subscribe(x => this.controller.AddDirt(this.possibility as Possibility));
   }
 
   Select(a: Action) {
@@ -30,7 +32,7 @@ export class PossibilityQuickEditComponent extends BaseQuickEditComponent implem
   }
 
   nameValueChanged(newValue: string) {
-    this.controller.AddDirt(this.possibility as Possibility);
+    this.changeDebounce.next();
     // add dirt?
   }
 

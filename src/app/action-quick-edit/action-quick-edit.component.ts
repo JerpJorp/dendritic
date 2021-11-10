@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { filter } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import { BaseQuickEditComponent } from '../base-quick-edit/base-quick-edit.component';
 import { Action } from '../classes/action';
 import { ActionCondition } from '../classes/action-condition';
@@ -24,6 +24,8 @@ export class ActionQuickEditComponent extends BaseQuickEditComponent implements 
     this.controller.currentUnit$.pipe(filter(x => x?.type === 'action')).subscribe(x => {
       this.action = x?.baseUnit as Action
     });
+
+    this.changeDebounce.pipe(debounceTime(300)).subscribe(x => this.controller.AddDirt(this.action as Action));
   }
 
   Select(c: ActionCondition) {
@@ -38,7 +40,9 @@ export class ActionQuickEditComponent extends BaseQuickEditComponent implements 
 
 
   nameValueChanged(newValue: string) {
-    this.controller.AddDirt(this.action as Action);
+    
+    this.changeDebounce.next();
+    
     // add dirt?
   }
 

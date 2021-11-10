@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { filter } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import { BaseQuickEditComponent } from '../base-quick-edit/base-quick-edit.component';
 import { Possibility } from '../classes/possibility';
 import { Situation } from '../classes/situation';
@@ -26,6 +26,8 @@ export class SituationQuickEditComponent extends BaseQuickEditComponent implemen
       this.situation = x?.baseUnit as Situation;     
       this.possibilities = this.situation ? this.controller.PossibilitiesFor(this.situation) : [];
     });
+
+    this.changeDebounce.pipe(debounceTime(300)).subscribe(x => this.controller.AddDirt(this.situation as Situation));
   }
 
   Select(p: Possibility) {
@@ -33,8 +35,7 @@ export class SituationQuickEditComponent extends BaseQuickEditComponent implemen
   }
 
   nameValueChanged(newValue: string) {
-    this.controller.AddDirt(this.situation as Situation);
-    // add dirt?
+    this.changeDebounce.next();
   }
 
   AddPossibility() {

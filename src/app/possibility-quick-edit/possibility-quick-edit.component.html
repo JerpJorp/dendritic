@@ -1,5 +1,5 @@
 <div *ngIf="possibility">
-    <div class="alert alert-success " role="alert">{{concretion?.possibilityName}}</div>
+    <div class="alert alert-success " role="alert">{{concretion?.possibilityName}} {{possibility?.name}}</div>
   
     <input *ngIf="!readOnly;" type="text" type="text" class="form-control" id="nameField" [(ngModel)]="possibility.name" (ngModelChange)="nameValueChanged($event)">  
     <button *ngIf="readOnly" class="btn-sm btn btn-outline-primary">{{possibility?.name}}</button>

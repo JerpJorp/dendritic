@@ -187,8 +187,6 @@ export class NgxCanvasGraphComponent implements OnInit, OnDestroy {
 
     const element = this.canvas?.nativeElement as HTMLCanvasElement;
 
-    
-
     this.dragEnd = {
       x: event.pageX - element.offsetLeft,
       y: event.pageY - element.offsetTop
