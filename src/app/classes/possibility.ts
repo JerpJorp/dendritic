@@ -2,6 +2,7 @@ import { Action } from "./action";
 import { BaseUnit } from "./base-unit";
 
 export class Possibility extends BaseUnit {
+
     actions: Action[];
 
     constructor(dto?: Partial<Possibility>) {
@@ -13,6 +14,11 @@ export class Possibility extends BaseUnit {
         let count  = this.dirty ? 1 : 0;
         this.actions.forEach(a => count += a.DirtyCount());
         return count;
+    }
+
+    Clean(): void {
+        this.dirty = false; 
+        this.actions.forEach(a => a.Clean());
     }
 
 }

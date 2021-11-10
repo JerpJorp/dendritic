@@ -1,7 +1,11 @@
+import { ThrowStmt } from "@angular/compiler";
 import { BaseUnit } from "./base-unit";
 import { Project } from "./project";
 
 export class Situation extends BaseUnit {
+    Clean(): void {
+        this.dirty = false;
+    }
     
     possibilityIds: string[];
     initial: boolean;

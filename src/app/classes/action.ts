@@ -2,6 +2,7 @@ import { ActionCondition } from "./action-condition";
 import { BaseUnit } from "./base-unit";
 
 export class Action extends BaseUnit {
+    
 
     conditions: ActionCondition[];
 
@@ -15,4 +16,10 @@ export class Action extends BaseUnit {
         this.conditions.forEach(c => count += c.DirtyCount());
         return count;
     }
+
+    Clean(): void {
+        this.dirty = false; 
+        this.conditions.forEach(a => a.Clean());
+    }
+
 }

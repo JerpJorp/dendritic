@@ -1,12 +1,10 @@
 import { Component, OnDestroy, OnInit, Optional } from '@angular/core';
-
 import { EMPTY, Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
 
-import { Auth, authState, signInAnonymously, signOut, User, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { Auth, authState, signOut, User, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { traceUntilFirst } from '@angular/fire/performance';
+
 import { DendriticControllerService } from './services/dendritic-controller.service';
-import { Project } from './classes/project';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +21,9 @@ export class AppComponent implements OnInit, OnDestroy{
   showLogoutButton = false;
   projectName = '';
 
+  readOnly = false;
   ready = false;
+
   constructor(@Optional() private auth: Auth, private controller: DendriticControllerService) {
     if (auth) {
       this.user = authState(this.auth);
@@ -47,6 +47,7 @@ export class AppComponent implements OnInit, OnDestroy{
       }, 0);      
     });
 
+    this.controller.readonly$.subscribe(x => this.readOnly = x)
     this.controller.Initialized$.subscribe(x => this.ready = x);
   }
 

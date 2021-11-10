@@ -39,7 +39,7 @@
   .canvas-container {
     height: 90vh;
     border: 1px solid rgba(250,250,250,.125);
-    overflow: scroll;
+    overflow: hidden;
   }
 
   .canvas-scrollable {

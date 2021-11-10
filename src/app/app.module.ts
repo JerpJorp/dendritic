@@ -25,6 +25,7 @@ import { MetadataEditorComponent } from './metadata-editor/metadata-editor.compo
 import { BaseQuickEditComponent } from './base-quick-edit/base-quick-edit.component';
 import { CanvasTestComponent } from './canvas-test/canvas-test.component';
 import { ProjectCanvasViewComponent } from './project-canvas-view/project-canvas-view.component';
+import { RepositoryComponent } from './repository/repository.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ProjectCanvasViewComponent } from './project-canvas-view/project-canvas
     MetadataEditorComponent,
     BaseQuickEditComponent,
     CanvasTestComponent,
-    ProjectCanvasViewComponent
+    ProjectCanvasViewComponent,
+    RepositoryComponent
   ],
   imports: [
     CommonModule,

@@ -15,7 +15,9 @@ export class AvailableProjectsComponent implements OnInit {
   constructor(private svc: DendriticControllerService, private router: Router) { }
 
   ngOnInit(): void {
-    this.svc.availableProjects$.subscribe(x => this.projects = x )
+    this.svc.availableProjects$.subscribe(x => {
+      this.projects = x;
+    } )
   }
 
   SelectProject(projectTrack: ProjectTrack) {

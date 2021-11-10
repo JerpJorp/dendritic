@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { Action } from '../classes/action';
 import { ActionCondition } from '../classes/action-condition';
 import { BaseUnit } from '../classes/base-unit';
@@ -9,6 +9,7 @@ import { Concretion } from '../classes/concretion';
 import { Possibility } from '../classes/possibility';
 import { Project, ProjectTrack } from '../classes/project';
 import { Situation } from '../classes/situation';
+import { FirestoreService } from './firestore.service';
 import { IndexedDbService } from './indexed-db.service';
 
 @Injectable({
@@ -30,25 +31,30 @@ export class DendriticControllerService {
   Initialized$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   lastProjectId: string | undefined;
   
-  constructor(private indexDbSvc: IndexedDbService) {     
+  constructor(private indexDbSvc: IndexedDbService, private fireStoreService: FirestoreService) {     
 
     this.concretions$.next(BuiltIns.DefaultConcretions);
 
+    this.fireStoreService.projects$.subscribe(x => {
+      console.log(x);
+    });
     this.currentProject$.subscribe( p => {      
       this.currentConcretion$.next (p ? this.concretions$.value.find(x => x.name === p.concretion) : undefined);
     });
 
-    this.indexDbSvc.SavedProjects$.subscribe(idbProjectTrackList => {
-      let projectList = BuiltIns.DefaultProjects.map(x =>  (new ProjectTrack(x.name, x.id, 'default')));
-      projectList.push(... idbProjectTrackList);
-      this.availableProjects$.next(projectList);
-      if (this.lastProjectId && this.currentProject$.value?.id !== this.lastProjectId) {
-        this.LoadProjectId(this.lastProjectId);
-      }
+    combineLatest([this.fireStoreService.projects$, this.indexDbSvc.SavedProjects$]).subscribe(x => {
+        const [fpt, ltp] = x;
+
+        let projectList = BuiltIns.DefaultProjects.map(x =>  (new ProjectTrack(x.name, x.id, 'default')));
+        if (fpt) {
+          projectList.push(... fpt);
+        }
+        if (ltp) {
+          projectList.push(... ltp);
+        }
+        this.availableProjects$.next(projectList);
+        this.Initialized$.next(fpt !== undefined && ltp !== undefined ? true : false);
     });
-    
-    this.indexDbSvc.Initialized$.subscribe(x => this.checkReady());
-    
   }
 
   checkReady() {
@@ -139,12 +145,16 @@ export class DendriticControllerService {
   }
 
   LoadProject(pTrack: ProjectTrack | undefined) {
+    this.currentUnit$.next(undefined);
     if (pTrack === undefined) {
       this.currentProject$.next(undefined);
     } else  if (pTrack.source === 'default') {
       this.currentProject$.next(BuiltIns.DefaultProjects.find(x => x.id === pTrack.id));
     } else if (pTrack.source === 'indexedDb') {
-      this.indexDbSvc.GetProject(pTrack).subscribe(x => this.currentProject$.next(x));
+      this.indexDbSvc.GetProject(pTrack).subscribe(x => this.currentProject$.next(new Project(x)));
+    } else if (pTrack.source === 'fireStore') {
+      this.currentProject$.next(
+        this.fireStoreService.actualProjects$.value.find(x => x.id === pTrack.id));
     }
   }
 
@@ -153,17 +163,28 @@ export class DendriticControllerService {
   }
 
   AddDirt(bu: BaseUnit, skipRepublish?: boolean) {
-    bu.dirty = true;    
-
+    bu.dirty = true;
     if (!skipRepublish) {
       this.Republish();
     } 
   }
 
+  CleanProject() {
+    if (this.currentProject$.value) {
+      const project = this.currentProject$.value;
+      project.dirty = false;
+
+
+      this.DirtyCheck();
+    }
+  }
+
   DirtyCheck() {
       if (this.currentProject$.value) {
         const project = this.currentProject$.value;
-        let count = project.situations.filter(x => x.dirty).length;
+
+        let count = project.dirty ? 1 : 0;
+        count += project.situations.filter(x => x.dirty).length;
 
         project.possibilities.forEach(possibility => {
           count += possibility.DirtyCount();

@@ -18,4 +18,11 @@ export class ActionCondition extends BaseUnit {
         return count;
     }
 
+    Clean(): void {
+        this.dirty = false; 
+        if (this.action) {
+            this.action.Clean();
+        }
+    }
+
 }

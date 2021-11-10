@@ -74,10 +74,7 @@ export class ProjectToDagre {
 
     }
     private addNodeEdge(targetId: string, parentId: string, name: string, type: BuType, bu: BaseUnit): {node: dagre.Node, edge: dagre.GraphEdge} {
-
-
         const color = ProjectToDagre.ColorLkp[type];
-
         this.graph.setNode(targetId,  
             { 
                 type: type,
@@ -85,8 +82,6 @@ export class ProjectToDagre {
                 displayName: name,
                 color: color,                 
                 width: 120, height: 40 });
-
-
         this.graph.setEdge(parentId, targetId, {});
         return {node: this.graph.node(targetId), edge: this.graph.edge(targetId, parentId)};
     }

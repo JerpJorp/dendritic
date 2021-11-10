@@ -11,7 +11,9 @@ export class IndexedDbService {
 
   readonly PREFIX = '_Dendritic.';
   
-SavedProjects$: BehaviorSubject<ProjectTrack[]> = new BehaviorSubject<ProjectTrack[]>([]);
+SavedProjects$: BehaviorSubject<ProjectTrack[]|undefined> 
+  = new BehaviorSubject<ProjectTrack[]|undefined>(undefined);
+
 Initialized$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private storage: StorageMap) { 

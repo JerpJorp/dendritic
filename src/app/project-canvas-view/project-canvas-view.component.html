@@ -5,6 +5,7 @@
                 <canvas #myCanvas 
                     (mousedown)="canvasMouseDown($event)" 
                     (mouseup)="drag=false" 
+                    (wheel)="canvasWheel($event)"
                     (mousemove)="canvasMouseMove($event)"
                     (mouseleave)="drag=false"
                     (click)="canvasMouseClick($event)"

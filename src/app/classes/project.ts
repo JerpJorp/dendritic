@@ -11,13 +11,22 @@ export class Project {
     possibilities: Possibility[] = [];
     origin: 'default' | 'custom';
 
+    dirty = false;
+
     constructor(dto?: any) {
         this.id = dto && dto.id ? dto.id: Common.NewID();
         this.origin = dto && dto.origin ? dto.origin: 'custom';
+        this.dirty = dto && dto.dirty ? dto.dirty: false;
         this.name = dto && dto.name ? dto.name : 'NEW PROJECT';
         this.concretion = dto && dto.concretion ? dto.concretion : 'code';
         this.situations = dto && dto.situations ? (dto.situations as Partial<Situation>[]).map(s => new Situation(s)) : [];
         this.possibilities = dto && dto.possibilities ?  (dto.possibilities as Partial<Possibility>[]).map(p => new Possibility(p)) : [];
+    }
+
+    CleanProject() {
+        this.dirty = false;
+        this.situations.forEach(s => s.Clean())
+        this.possibilities.forEach(p => p.Clean());
     }
 }
 
