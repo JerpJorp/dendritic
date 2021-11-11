@@ -7,7 +7,9 @@
 
 <div *ngIf="selectedUnit && concretion?.allowedMetadataTypes">
 
-    <div class="alert alert-primary" role="alert">Information</div>
+    <div 
+    [ngClass]="{'alert-info': selectedUnit.type === 'situation' && readOnly, 'alert-success': selectedUnit.type === 'possibility' && readOnly, 'alert-danger': selectedUnit.type === 'action' && readOnly, 'alert-dark': !readOnly}"
+    class="alert" role="alert">Information</div>
 
     <h6 class="card-title">Details for {{selectedUnit?.baseUnit?.name}}</h6>
 
