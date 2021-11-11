@@ -54,7 +54,20 @@ export class DendriticControllerService {
         }
         this.availableProjects$.next(projectList);
         this.Initialized$.next(fpt !== undefined && ltp !== undefined ? true : false);
+        this.delayProjectLoadCheck();
     });
+  }
+
+  delayProjectLoadCheck() {
+    if (this.lastProjectId !== undefined && this.Initialized$.value) {      
+      const found = this.availableProjects$.value.find(x => x.id === this.lastProjectId);
+      if (found) {
+        if (this.currentProject$.value === undefined || this.currentProject$.value.id !== found.id) {
+          this.LoadProjectId(found.id);
+        }
+      }
+    }
+
   }
 
   checkReady() {

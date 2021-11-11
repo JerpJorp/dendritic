@@ -81,7 +81,7 @@ export class ProjectToDagre {
                 bu: bu,
                 displayName: name,
                 color: color,                 
-                width: 120, height: 40 });
+                width:  5 + name.length*10, height: 40 });
         this.graph.setEdge(parentId, targetId, {});
         return {node: this.graph.node(targetId), edge: this.graph.edge(targetId, parentId)};
     }

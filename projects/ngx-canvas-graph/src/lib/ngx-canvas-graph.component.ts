@@ -6,9 +6,7 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 import * as dagre from "dagre";
 
 import { NgxCanvasGraphService } from './ngx-canvas-graph.service';
-
 import { Node } from './node';
-
 import { CanvasHelper } from './canvas-helper';
 
 
@@ -16,7 +14,8 @@ import { CanvasHelper } from './canvas-helper';
   selector: 'lib-ngx-canvas-graph',
   templateUrl: './ngx-canvas-graph.component.html',
   styles: [
-    '.canvas-container { height: 90vh; border: 1px solid rgba(250,250,250,.125); overflow: hidden;}'
+    '.canvas-container { height: 90vh; border: 1px solid rgba(250,250,250,.125); overflow: hidden; position: relative}',
+    '.canvas-overlay { z-index:2; position:absolute; top:10px; left:10px} '
   ]
 })
 export class NgxCanvasGraphComponent implements OnInit, OnDestroy {
@@ -38,6 +37,7 @@ export class NgxCanvasGraphComponent implements OnInit, OnDestroy {
 
   moveDebounce: Subject<MouseEvent> = new Subject<MouseEvent>();
 
+  showReset = false;
   constructor(private svc: NgxCanvasGraphService) { }
 
   ngOnInit(): void {
@@ -61,7 +61,7 @@ export class NgxCanvasGraphComponent implements OnInit, OnDestroy {
       const links = this.svc.nodes$.value.links;
       const graph = new dagre.graphlib.Graph();
       graph.setGraph({ width: 1800, height: 1000, nodesep: 20, ranksep: 15, rankdir: 'LR' });
-      nodes.forEach(node => graph.setNode(node.id, { width: 120, height: 40, source: node }));
+      nodes.forEach(node => graph.setNode(node.id, { width: 50 + node.displayText.length * 8, height: 42, source: node }));
       links.forEach(link => graph.setEdge(link.fromNodeId as string, link.toNodeId as string, { source: link }));
       dagre.layout(graph);
       this.edges = graph.edges().map(e => ({ start: graph.node(e.v), end: graph.node(e.w) }));
@@ -72,11 +72,35 @@ export class NgxCanvasGraphComponent implements OnInit, OnDestroy {
     }
   }
 
+  resetCanvasZoom() {
+    if (this.ctx) {
+      const txfrm = this.ctx.getTransform();
+      this.ctx.setTransform(1,0,0,1,txfrm.e,txfrm.f);
+      this.Draw(this.ctx);
+    }
+  }
+  resetCanvasCenter() {
+    if (this.ctx) {
+      const txfrm = this.ctx.getTransform();
+      this.ctx.setTransform(txfrm.a,0,0,txfrm.d,0,0);
+      this.Draw(this.ctx);
+    }
+  }
+
+  resetCanvas() {
+    if (this.ctx) {
+      const txfrm = this.ctx.getTransform();
+      this.ctx.setTransform(txfrm.a,0,0,txfrm.d,0,0);
+      this.Draw(this.ctx);
+    }
+    
+  }
+
   Draw(ctx: CanvasRenderingContext2D) {
     const element = this.canvas?.nativeElement as HTMLCanvasElement;    
     this.clear(ctx);
     ctx.shadowColor = '#AAAAAA';
-    ctx.shadowBlur = 10;
+    // ctx.shadowBlur = 10;
 
     ctx.font = "18px system-ui";
     ctx.textAlign = 'center'
@@ -106,7 +130,8 @@ export class NgxCanvasGraphComponent implements OnInit, OnDestroy {
     this.ctx?.fill();
     if (n.source.displayText) {
       ctx.fillStyle = n.source.textColor ? n.source.textColor : 'black';
-      ctx.fillText(n.source.displayText, n.x + (n.width / 2), n.y + 20, n.width - 10);
+      //ctx.fillText(n.source.displayText, n.x + (n.width / 2), n.y + 27, n.width - 10);
+      ctx.fillText(n.source.displayText, n.x + (n.width / 2), n.y + 27);
     }
   }
 
@@ -142,14 +167,31 @@ export class NgxCanvasGraphComponent implements OnInit, OnDestroy {
     }
   }
 
-  canvasWheel(event: WheelEvent) {
-    const inverter = event.deltaY > 0 ? 0.1 : -0.1;
-
-    this.ctx?.scale(1 + inverter, 1 + inverter)
+  checkShowReset() {
     if (this.ctx) {
-      this.Draw(this.ctx)
+      const txfrm = this.ctx.getTransform();
+      this.showReset = txfrm.a !== 1 || txfrm.f !== 0;
     }
-    return false
+  }
+  canvasWheel(event: WheelEvent) {
+
+
+    if (this.ctx) {
+
+      const txfrmA = this.ctx.getTransform().a;
+      let inverter = event.deltaY > 0 ? 0.1 : -0.1;
+
+      inverter = inverter / txfrmA;
+      
+      this.ctx.translate(event.x* txfrmA, event.y* txfrmA);
+      this.ctx.scale(1 + inverter, 1 + inverter);
+      this.ctx.translate(event.x*-1* txfrmA, event.y*-1* txfrmA);
+      this.Draw(this.ctx)
+      this.checkShowReset();
+      return false  
+    }
+    return true;
+
   }
 
   private findMatchingNode(event: MouseEvent): Node | undefined {
@@ -199,6 +241,7 @@ export class NgxCanvasGraphComponent implements OnInit, OnDestroy {
       this.ctx?.translate((this.dragEnd.x - this.dragStart.x) / txfrm.a, (this.dragEnd.y - this.dragStart.y) / txfrm.d);
       this.dragStart = this.dragEnd;
       this.Draw(this.ctx);
+      this.checkShowReset();
     }
   }
 

@@ -7,4 +7,11 @@
         (mouseleave)="drag=false"
         (click)="canvasMouseClick($event)"
         width="2500" height="3500"></canvas>
+
+        <div *ngIf="showReset"  class="canvas-overlay">
+            
+            <input *ngIf="showReset" type="button" (click)="resetCanvasZoom()" class="btn btn-sm btn-outline-secondary mx-2" value="Reset zoom"/>
+            <input *ngIf="showReset" type="button" (click)="resetCanvasCenter()" class="btn btn-sm btn-outline-secondary mx-2" value="Reset center"/>    
+        </div>
+        
 </div>

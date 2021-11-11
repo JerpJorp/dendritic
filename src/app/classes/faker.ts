@@ -62,7 +62,7 @@ export class Faker {
 
         this.FakeUpMetadata(possibility);
         possibility.actions = Array(this.getRandomInt(1, 2)).fill(0).map(idx => {
-            const newAction = new Action({ name: faker.name.findName() });
+            const newAction = new Action({ name: faker.lorem.words(3) });
             this.FakeUpAction(newAction, 0);
             return newAction;
         });
@@ -75,7 +75,7 @@ export class Faker {
         if (depth < 7) {
             a.conditions = Array(this.getRandomInt(1, 3)).fill(0).map(idx => {
                 const newCondition = new ActionCondition({ name: `if ${idx}` });
-                newCondition.action = new Action({ name: faker.name.findName() });
+                newCondition.action = new Action({ name: faker.lorem.words(3) });
                 this.FakeUpAction(newCondition.action, ++depth);
                 return newCondition;
             });
@@ -126,7 +126,7 @@ class FakeData {
 
             this.FakeUpMetadata(possibility);
             possibility.actions = Array(this.getRandomInt(2, 4)).fill(0).map(idx => {
-                const newAction = new Action({ name: faker.name.findName() });
+                const newAction = new Action({ name: faker.lorem.words(3) });
                 this.FakeUpAction(newAction, 0);
                 return newAction;
             });

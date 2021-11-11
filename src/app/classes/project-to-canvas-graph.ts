@@ -9,17 +9,17 @@ export class ProjectToCanvasGraph {
 
     static readonly RootID = 'rootID';
 
-    static readonly ColorLkp: {[index: string]: string;} = {
-        'situation': "#5dbecd",
-        'possibility': "#4dd0af",        
-        'action': "#ee8277",
-        'condition': "#dff2ff",
+    static readonly ColorLkp: {[index: string]: {backColor: string, textColor: string};} = {
+        'situation':    {backColor: '#0c515c', textColor: '#5dbecd'},
+        'possibility':  {backColor: '#005e46', textColor: '#4dd0af'},       
+        'action':       {backColor: '#74261e', textColor: '#ee8277'},
+        'condition':    {backColor: '#74261e', textColor: '#ee8277'},
     };
 
     static Build(project: Project): GraphBuilder {
 
         const builder: GraphBuilder = new GraphBuilder();
-        const root = builder.AddNode(new Node('Flows', 'white'));
+        const root = builder.AddNode(new Node('Flows', '#313131', '#919191' ));
         project.situations.filter(x => x.initial).forEach(situation => {
             const s = root.AddLinkTo(new Link(''), this.newNode(situation, 'situation'));
             situation.possibilityIds.map(pid => project.possibilities.find(x => x.id === pid))
@@ -48,6 +48,9 @@ export class ProjectToCanvasGraph {
     }   
 
     private static newNode(bu: BaseUnit, type: BuType) {
-        return new Node(bu.name, ProjectToCanvasGraph.ColorLkp[type], undefined,  {selectedUnit: new SelectedUnit(bu, type)} )
+
+        const lkp = ProjectToCanvasGraph.ColorLkp[type];
+
+        return new Node(bu.name, lkp.backColor, lkp.textColor, {selectedUnit: new SelectedUnit(bu, type)} );
     }
 }
