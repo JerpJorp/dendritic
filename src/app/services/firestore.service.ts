@@ -19,12 +19,19 @@ export class FirestoreService {
 
   constructor(private fireStore: Firestore) { 
 
-    // const col = collection(fireStore, 'projects');
-    
-    // collectionData(col).subscribe(x => {
-    //   this.actualProjects$.next(x as Project[]);
-    //   this.projects$.next(this.actualProjects$.value.map(p => ({name: p.name, id: p.id, source: 'fireStore'})))
-    // });
+    const col = collection(fireStore, 'projects');
+   
+    collectionData(col).subscribe(x => {
+
+      const projects = x
+        .map(x => x.json)
+        .map(json => JSON.parse(json))
+        .map(dto => new Project(dto))
+
+      this.actualProjects$.next(projects);
+      
+      this.projects$.next(this.actualProjects$.value.map(p => ({name: p.name, id: p.id, source: 'fireStore'})))
+    });
 
     this.projects$.next([]);
     this.actualProjects$.next([]);
@@ -32,6 +39,6 @@ export class FirestoreService {
   }
 
   Upsert(project: Project) {
-    setDoc(doc(this.fireStore, `projects/${project.id}`), project);
+    setDoc(doc(this.fireStore, `projects`, `${project.id}`), {json:  JSON.stringify(project) } );
   }
 }

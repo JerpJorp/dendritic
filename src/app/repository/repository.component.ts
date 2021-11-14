@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectTrack, Project} from '../classes/project';
 import { DendriticControllerService } from '../services/dendritic-controller.service';
+import { FirestoreService } from '../services/firestore.service';
 
 @Component({
   selector: 'app-repository',
@@ -14,6 +15,7 @@ export class RepositoryComponent implements OnInit {
 
   constructor(
     private controller: DendriticControllerService,    
+    private fsSvc: FirestoreService
   ) { }
 
   ngOnInit(): void {
@@ -21,5 +23,10 @@ export class RepositoryComponent implements OnInit {
     this.controller.availableProjects$.subscribe(x => this.availableProjects = x);
   }
 
+  Save(): void {
+    if (this.project) {
+      this.fsSvc.Upsert(this.project);
+    }
+  }
 
 }
