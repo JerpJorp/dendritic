@@ -48,9 +48,7 @@ additional predefined types can be added to each concretion if it makes sense.
 # Technical notes
 
 ## Development server
-
-Run `ng build ngx-canvas-graph --watch` to build/watch ngx-canvas-graph
-In another command shell, run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 Run `ng test` in another command shell to also see test results with changes.
 
 ## Code scaffolding

@@ -1,5 +1,4 @@
 import * as faker from "faker";
-import { fake } from "faker";
 import { Action } from "./action";
 import { ActionCondition } from "./action-condition";
 import { BaseUnit } from "./base-unit";
