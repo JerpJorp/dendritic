@@ -2,17 +2,14 @@
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import * as d3 from 'd3';
-
 import { SelectedUnit } from '../classes/common';
 import { Project } from '../classes/project';
-import { ProjectToDagre } from '../classes/project-to-dagre';
-import { DendriticControllerService } from '../services/dendritic-controller.service';
 
+import { DendriticControllerService } from '../services/dendritic-controller.service';
 
 import { ProjectToCanvasGraph } from '../classes/project-to-canvas-graph';
 
-import { GraphBuilder, Node, BuiltNode, Link, GraphData, INodeOverrideParameters, ILinkOverrideParameters, IClearOverrideParameters  } from 'ngx-canvas-graph';
+import { Node, GraphData  } from 'ngx-canvas-graph';
 
 @Component({
   selector: 'app-project-canvas-view',
@@ -31,7 +28,7 @@ export class ProjectCanvasViewComponent implements OnInit, AfterViewInit {
 
   selectedUnit: SelectedUnit | undefined;
 
-  graph: ProjectToDagre | undefined;
+  
 
   drag = false;
   dragStart: { x: number, y: number } = { x: 0, y: 0 };
@@ -77,7 +74,12 @@ export class ProjectCanvasViewComponent implements OnInit, AfterViewInit {
   }
 
   nodeMouseOver(node: Node) {
-    
+    const selectedUnit = node.properties?.selectedUnit;
+    if (selectedUnit) {
+      this.controller.currentUnit$.next(selectedUnit as SelectedUnit);
+    } else {
+      this.controller.currentUnit$.next(undefined);
+    }
   }
 
   

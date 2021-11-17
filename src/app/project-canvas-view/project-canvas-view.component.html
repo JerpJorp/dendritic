@@ -7,9 +7,10 @@
                 height: 1000, 
                 nodesep: 25, 
                 ranksep: 10, 
-                rankdir: 'RL' }"
+                rankdir: 'LR' }"
             [graphData]="graphData"
             (nodeClick)="nodeClick($event)"
+            [initialCollapseDepth]="3"
             (nodeMouseOver)="nodeMouseOver($event)"
             ></lib-ngx-canvas-graph>
         </div>
