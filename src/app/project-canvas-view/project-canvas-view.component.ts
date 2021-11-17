@@ -9,7 +9,8 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
 
 import { ProjectToCanvasGraph } from '../classes/project-to-canvas-graph';
 
-import { Node, GraphData  } from 'ngx-canvas-graph';
+import { Node, GraphData, INodeOverrideParameters, NgxCanvasGraphComponent  } from 'ngx-canvas-graph';
+import { CanvasHelper } from 'ngx-smart-canvas';
 
 @Component({
   selector: 'app-project-canvas-view',
@@ -18,16 +19,16 @@ import { Node, GraphData  } from 'ngx-canvas-graph';
 })
 export class ProjectCanvasViewComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('myCanvas', { static: true })
-  canvas: ElementRef<HTMLCanvasElement> | undefined;
+  @ViewChild(NgxCanvasGraphComponent)
+  private canvasGraphComponent!: NgxCanvasGraphComponent;
 
-  ctx: CanvasRenderingContext2D | null | undefined = undefined;
-
+ 
   projectId: string | undefined = '';
   project: Project | undefined = undefined;
 
   selectedUnit: SelectedUnit | undefined;
 
+  stickyNode: Node | undefined;
   
 
   drag = false;
@@ -45,6 +46,7 @@ export class ProjectCanvasViewComponent implements OnInit, AfterViewInit {
     this.controller.currentProject$.subscribe(x => {
       this.project = x;
       if (this.project) {
+        this.stickyNode = undefined;
         const builder = ProjectToCanvasGraph.Build(this.project);
         this.graphData = builder.graphData;
       }     
@@ -57,14 +59,23 @@ export class ProjectCanvasViewComponent implements OnInit, AfterViewInit {
       this.controller.LoadProjectId(this.projectId || '');
     });
 
-
-
     this.controller.currentUnit$.subscribe(x => this.selectedUnit = x);
     this.controller.readonly$.subscribe(x => this.readOnly = x);
   }
 
-
   nodeClick(node: Node) {
+
+    if (this.stickyNode) {  
+      if (this.stickyNode.id === node.id) {
+        this.stickyNode = undefined;
+      } else {
+        this.stickyNode = node;
+      }
+    } else {
+      this.stickyNode = node;
+    }
+
+    this.canvasGraphComponent?.Draw(this.canvasGraphComponent.ctx as CanvasRenderingContext2D);
     const selectedUnit = node.properties?.selectedUnit;
     if (selectedUnit) {
       this.controller.currentUnit$.next(selectedUnit as SelectedUnit);
@@ -74,13 +85,29 @@ export class ProjectCanvasViewComponent implements OnInit, AfterViewInit {
   }
 
   nodeMouseOver(node: Node) {
-    const selectedUnit = node.properties?.selectedUnit;
-    if (selectedUnit) {
-      this.controller.currentUnit$.next(selectedUnit as SelectedUnit);
-    } else {
-      this.controller.currentUnit$.next(undefined);
+    if (this.stickyNode === undefined) {
+      const selectedUnit = node.properties?.selectedUnit;
+      if (selectedUnit) {
+        this.controller.currentUnit$.next(selectedUnit as SelectedUnit);
+      } else {
+        this.controller.currentUnit$.next(undefined);
+      }  
     }
   }
 
-  
+  customNodeDraw(params: INodeOverrideParameters) {
+
+    params.completed = false; 
+    const n = params.extNode;
+    const ctx = params.ctx;
+   
+    if (n.source && this.stickyNode &&  n.source.id === this.stickyNode.id) {
+      ctx.lineWidth  = 3;        
+      CanvasHelper.roundRect(ctx, n.x-1, n.y-1, n.width+2, n.height+2, 6);    
+      params.ctx.strokeStyle = 'white';    
+      params.ctx.stroke();
+    }
+
+  }
+
 }

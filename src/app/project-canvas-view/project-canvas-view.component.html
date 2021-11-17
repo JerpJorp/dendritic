@@ -12,6 +12,7 @@
             (nodeClick)="nodeClick($event)"
             [initialCollapseDepth]="3"
             (nodeMouseOver)="nodeMouseOver($event)"
+            (nodeDrawOverride) = "customNodeDraw($event)"
             ></lib-ngx-canvas-graph>
         </div>
        
