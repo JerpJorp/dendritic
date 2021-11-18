@@ -10,7 +10,7 @@
                 rankdir: 'LR' }"
             [graphData]="graphData"
             (nodeClick)="nodeClick($event)"
-            [initialCollapseDepth]="3"
+            [initialCollapseDepth]="initialCollapseDepth"
             (nodeMouseOver)="nodeMouseOver($event)"
             (nodeDrawOverride) = "customNodeDraw($event)"
             ></lib-ngx-canvas-graph>

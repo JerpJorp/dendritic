@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProjectTrack, Project} from '../classes/project';
 import { DendriticControllerService } from '../services/dendritic-controller.service';
 import { FirestoreService } from '../services/firestore.service';
+import { IndexedDbService } from '../services/indexed-db.service';
 
 @Component({
   selector: 'app-repository',
@@ -15,7 +16,8 @@ export class RepositoryComponent implements OnInit {
 
   constructor(
     private controller: DendriticControllerService,    
-    private fsSvc: FirestoreService
+    private fsSvc: FirestoreService,
+    private indexDbService: IndexedDbService
   ) { }
 
   ngOnInit(): void {
@@ -25,7 +27,7 @@ export class RepositoryComponent implements OnInit {
 
   Save(): void {
     if (this.project) {
-      this.fsSvc.Upsert(this.project);
+      this.indexDbService.Save(this.project);
     }
   }
 

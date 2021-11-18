@@ -12,6 +12,7 @@ const routes: Routes = [
   { path: 'new', component: NewProjectComponent },
   { path: 'canvas', component: CanvasTestComponent },
   { path: 'repository', component: RepositoryComponent },
+  { path: '**', component: AvailableProjectsComponent }
   
 ];
 

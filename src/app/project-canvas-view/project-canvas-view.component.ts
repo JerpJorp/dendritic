@@ -39,15 +39,40 @@ export class ProjectCanvasViewComponent implements OnInit, AfterViewInit {
 
   graphData: GraphData = new GraphData();
 
+  initialCollapseDepth = 3;
 
 
   constructor(private route: ActivatedRoute, private controller: DendriticControllerService) { }
   ngAfterViewInit(): void {
     this.controller.currentProject$.subscribe(x => {
+
+      if (x && this.project && x.id === this.projectId) {
+        //refresh;
+        this.initialCollapseDepth = 99;
+      } else {
+        this.initialCollapseDepth = 3;
+      }
+
       this.project = x;
       if (this.project) {
         this.stickyNode = undefined;
+
+
+        const oldInternalState = this.graphData ? this.graphData.nodes.map(old =>  ({id: old.id, internalDisplayState: old.internalDisplayState})) : [];
+        
         const builder = ProjectToCanvasGraph.Build(this.project);
+
+        if (oldInternalState) {
+          oldInternalState
+            .map(oldNode =>  ({old: oldNode, new: builder.graphData.nodes.find(newNode => newNode.id === oldNode.id)}))
+            .filter(pair => pair.new !== undefined)
+            .forEach(pair => {
+              if (pair.old.internalDisplayState !== 'last' && pair.new) {
+                pair.new.internalDisplayState = pair.old.internalDisplayState;
+              }
+            });
+        }
+      
         this.graphData = builder.graphData;
       }     
     });

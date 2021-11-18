@@ -19,7 +19,7 @@ export class ProjectToCanvasGraph {
     static Build(project: Project): GraphBuilder {
 
         const builder: GraphBuilder = new GraphBuilder();
-        const root = builder.AddNode(new Node('Flows', '#313131', '#919191' ));
+        const root = builder.AddNode(new Node('Flows', '#313131', '#919191', undefined, 'idROOT' ));
         project.situations.filter(x => x.initial).forEach(situation => {
             const s = root.AddLinkTo(new Link(''), this.newNode(situation, 'situation'));
             situation.possibilityIds.map(pid => project.possibilities.find(x => x.id === pid))
@@ -50,7 +50,7 @@ export class ProjectToCanvasGraph {
     private static newNode(bu: BaseUnit, type: BuType) {
 
         const lkp = ProjectToCanvasGraph.ColorLkp[type];
-
-        return new Node(bu.name, lkp.backColor, lkp.textColor, {selectedUnit: new SelectedUnit(bu, type)} );
+        
+        return new Node(bu.name, lkp.backColor, lkp.textColor, {selectedUnit: new SelectedUnit(bu, type)}, bu.id );
     }
 }

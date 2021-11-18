@@ -31,7 +31,7 @@
     "faker": "^5.5.3",
     "firebase": "^9.2.0",
     "ngx-bootstrap": "^7.1.0",
-    "ngx-canvas-graph": "latest",
+    "ngx-canvas-graph": "0.0.5",
     "ngx-smart-canvas": "latest",
     "rxfire": "^6.0.0",
     "rxjs": "~6.6.0",
