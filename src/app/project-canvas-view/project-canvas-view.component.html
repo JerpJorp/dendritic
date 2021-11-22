@@ -11,8 +11,8 @@
             [graphData]="graphData"
             (nodeClick)="nodeClick($event)"
             [initialCollapseDepth]="initialCollapseDepth"
-            (nodeMouseOver)="nodeMouseOver($event)"
-            (nodeDrawOverride) = "customNodeDraw($event)"
+            (nodeMouseOver)="nodeMouseOver($event)"            
+            (nodePostDraw)="nodePostDraw($event)"
             ></lib-ngx-canvas-graph>
         </div>
        

@@ -9,8 +9,8 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
 
 import { ProjectToCanvasGraph } from '../classes/project-to-canvas-graph';
 
-import { Node, GraphData, INodeOverrideParameters, NgxCanvasGraphComponent  } from 'ngx-canvas-graph';
-import { CanvasHelper } from 'ngx-smart-canvas';
+import { Node, GraphData, NgxCanvasGraphComponent, INodeCustomPostDraw  } from '@dendrityc/ngx-canvas-graph';
+import { CanvasHelper } from '@dendrityc/ngx-smart-canvas';
 
 @Component({
   selector: 'app-project-canvas-view',
@@ -100,7 +100,8 @@ export class ProjectCanvasViewComponent implements OnInit, AfterViewInit {
       this.stickyNode = node;
     }
 
-    this.canvasGraphComponent?.Draw(this.canvasGraphComponent.ctx as CanvasRenderingContext2D);
+    this.canvasGraphComponent?.Draw();
+    this.canvasGraphComponent?.mainLayer?.parentViewport.render();
     const selectedUnit = node.properties?.selectedUnit;
     if (selectedUnit) {
       this.controller.currentUnit$.next(selectedUnit as SelectedUnit);
@@ -120,9 +121,9 @@ export class ProjectCanvasViewComponent implements OnInit, AfterViewInit {
     }
   }
 
-  customNodeDraw(params: INodeOverrideParameters) {
+  nodePostDraw(params: INodeCustomPostDraw) {
 
-    params.completed = false; 
+    
     const n = params.extNode;
     const ctx = params.ctx;
    

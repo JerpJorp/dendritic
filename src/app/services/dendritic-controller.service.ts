@@ -26,8 +26,10 @@ export class DendriticControllerService {
   currentUnit$: BehaviorSubject<SelectedUnit | undefined> = new BehaviorSubject<SelectedUnit | undefined>(undefined);
   dirtyObjectCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
-  readonly$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  readonly$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
+  allActions$: BehaviorSubject<Action[]> = new BehaviorSubject<Action[]>([]);
+  
   Initialized$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   lastProjectId: string | undefined;
   
@@ -40,6 +42,7 @@ export class DendriticControllerService {
     });
     this.currentProject$.subscribe( p => {      
       this.currentConcretion$.next (p ? this.concretions$.value.find(x => x.name === p.concretion) : undefined);
+      this.CreateAllActionList();
     });
 
     combineLatest([this.fireStoreService.projects$, this.indexDbSvc.SavedProjects$]).subscribe(x => {
@@ -142,6 +145,14 @@ export class DendriticControllerService {
     this.Republish();
   }
 
+  AddConditionToExistingAction(parentAction: Action, conditionName: string, childAction: Action): ActionCondition {
+    const newCondition = new ActionCondition({name: conditionName});
+    newCondition.action = childAction;
+    parentAction.conditions.push(newCondition);
+    this.Republish();
+    return newCondition;
+  }
+
   AddCondition(parentAction: Action, conditionName: string, actionName: string): ActionCondition {
 
     const newCondition = new ActionCondition({name: conditionName});
@@ -157,6 +168,27 @@ export class DendriticControllerService {
     this.DirtyCheck();
   }
 
+  CreateAllActionList() {
+    if (this.currentProject$.value) {
+      const project = this.currentProject$.value;
+      const possibilities = project.possibilities;
+      const actions: Action[] = [];
+      possibilities.forEach(p => p.actions.forEach(a => this.ActionLoadRecurse(a, actions)));
+      this.allActions$.next(actions);
+    }
+  }
+
+  ActionLoadRecurse(action: Action, list: Action[]) {
+    if (list.find(x => x.id === action.id)) {
+      return; // already processed
+    }
+    list.push(action)
+    action.conditions
+      .map(c => c.action)
+      .filter(x => x !== undefined && !list.find(listItem => listItem.id === x.id))
+      .map(x => x as Action)
+      .forEach(childAction => this.ActionLoadRecurse(childAction, list));
+  }
   LoadProject(pTrack: ProjectTrack | undefined) {
     this.currentUnit$.next(undefined);
     if (pTrack === undefined) {
@@ -198,10 +230,8 @@ export class DendriticControllerService {
 
         let count = project.dirty ? 1 : 0;
         count += project.situations.filter(x => x.dirty).length;
-
-        project.possibilities.forEach(possibility => {
-          count += possibility.DirtyCount();
-        });
+        count += project.possibilities.filter(x => x.dirty).length;
+        count += this.allActions$.value.filter(x => x.dirty).length;
         this.dirtyObjectCount$.next(count);
       }
 

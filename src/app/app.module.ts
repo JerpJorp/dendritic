@@ -26,7 +26,7 @@ import { BaseQuickEditComponent } from './base-quick-edit/base-quick-edit.compon
 import { CanvasTestComponent } from './canvas-test/canvas-test.component';
 import { ProjectCanvasViewComponent } from './project-canvas-view/project-canvas-view.component';
 import { RepositoryComponent } from './repository/repository.component';
-import { NgxCanvasGraphModule } from 'ngx-canvas-graph';
+import { NgxCanvasGraphModule } from '@dendrityc/ngx-canvas-graph';
 
 @NgModule({
   declarations: [

@@ -39,13 +39,14 @@ export class NewProjectComponent extends BaseQuickEditComponent implements OnIni
   }
 
   CreateProject() {
-    const newProject = new Project({name: this.newName, concretion: this.concretion?.name});
+    const newProject = new Project({name: this.newName, concretion: this.selectedConcretion?.name});
     if (this.generateFakeStructure) {
       const faker: Faker = new Faker();
       faker.FakeUpProject(newProject);
     }
 
     this.indexStore.Save(newProject);
+    this.controller.readonly$.next(false);
     this.router.navigate(['/view', newProject.id]);
 
 

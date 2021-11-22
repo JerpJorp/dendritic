@@ -8,7 +8,7 @@ export abstract class BaseUnit {
     name: string;
     id: string;
     dirty: boolean;
-
+    pathToRoot: BaseUnit[] = [];
     // Metadata: 
     //  type: MetadataType = 'comment';
     //  description = '';

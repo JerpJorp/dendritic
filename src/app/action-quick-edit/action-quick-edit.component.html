@@ -1,6 +1,6 @@
 <div *ngIf="action">
     <div class="alert alert-danger" role="alert">{{concretion?.actionName}} {{action?.name}}</div>
-  
+    
     <input *ngIf="!readOnly;" type="text" type="text" class="form-control" id="nameField" [(ngModel)]="action.name" (ngModelChange)="nameValueChanged($event)">  
     <button *ngIf="readOnly" class="btn-sm btn btn-outline-primary">{{action?.name}}</button>
   
@@ -16,7 +16,20 @@
                   class="btn-sm btn"><span>{{c.name}}</span> <span *ngIf="c.action"> -> {{c.action.name}}</span> </button>
               </li>   
               <li *ngIf="!readOnly" class="list-group-item">
-                <input type="text" class="form-control" id="tempStateName" [(ngModel)]="tempActionName" (keyup.enter)="AddCondition()">
+                <input type="text" class="form-control" id="tempStateName" 
+                  placeholder="enter new action or condtion and action as conditionName|Actionname"
+                  [(ngModel)]="tempActionName" (keyup.enter)="AddCondition()">
+              </li>
+
+              <li *ngIf="!readOnly" class="list-group-item">
+
+                <select placeholder="select existing action" class="form-control" [(ngModel)]="selectedChildAction">
+                  <option [ngValue]="undefined">Select existing action</option>
+                  <option *ngFor="let childAction of theseActions" [ngValue]="childAction">
+                       {{childAction.name}}
+                   </option>
+                </select>
+
               </li>
             </ul>   
           </div>
@@ -27,8 +40,15 @@
               </li>   
               <li  class="list-group-item d-grid">
                 <button type="button"
-                  *ngIf="tempActionName && tempActionName.length > 0"
+                  [disabled]="tempActionName === undefined || tempActionName.length === 0"
                   (click)="AddCondition()"
+                  class="btn btn-outline-secondary btn-sm">+</button> 
+                
+              </li>
+              <li  class="list-group-item d-grid">
+                <button type="button"
+                  *ngIf="selectedChildAction"
+                  (click)="childActionChanged()"
                   class="btn btn-outline-secondary btn-sm">+</button> 
               </li>
             </ul>
@@ -38,14 +58,19 @@
         <div *ngIf="!readOnly" class="row">
             <div class="col">
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"  [checked]="lineMode"
+                    <input class="form-check-input" type="checkbox" id="entryModeChecked"  [checked]="lineMode"
                     (change)="ToggleLineMode()">
-                    <label *ngIf="lineMode" class="form-check-label" for="flexSwitchCheckChecked">Linear entry mode</label>
-                    <label *ngIf="!lineMode" class="form-check-label" for="flexSwitchCheckChecked">Child entry mode</label>
+                    <label *ngIf="lineMode" class="form-check-label" for="entryModeChecked">Linear entry mode</label>
+                    <label *ngIf="!lineMode" class="form-check-label" for="entryModeChecked">Child entry mode</label>
                 </div>
             </div>
         </div>
 
       </div>
     </div>
-  
+
+    <div *ngIf="action.pathToRoot">
+      <span class="badge  bg-primary me-2">Path: </span>
+      <span class="badge alert-secondary me-1" *ngFor="let a of action.pathToRoot">{{a.name}}</span>
+    </div>
+    
