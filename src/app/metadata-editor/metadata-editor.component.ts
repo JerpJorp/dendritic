@@ -12,54 +12,55 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
 })
 export class MetadataEditorComponent extends BaseQuickEditComponent implements OnInit {
 
-  selectedUnit: SelectedUnit | undefined;
-
   groupedMetadata: { [index: string]: Metadata[]} = {};
 
-  constructor(controller: DendriticControllerService) { 
+  constructor(controller: DendriticControllerService) {
     super(controller);
   }
 
   AddMetadata(type: MetadataType) {
-    if (this.selectedUnit) {
-      const unit = this.selectedUnit.baseUnit as BaseUnit;
-      if (unit.metadata === undefined) 
+    if (this.currentUnit) {
+      const unit = this.currentUnit.baseUnit as BaseUnit;
+      if (unit.metadata === undefined)
       {
         unit.metadata = [];
       }
-      this.selectedUnit.baseUnit.metadata?.push(new Metadata(type));
+      this.currentUnit.baseUnit.metadata?.push(new Metadata(type));
       this.buildGroup();
     }
   }
+
+  onCurrentUnitDelta() {
+    this.buildGroup();
+  }
   ngOnInit(): void {
     this.controller.currentUnit$.subscribe(x => {
-      this.selectedUnit = x;
-      this.buildGroup();
     });
   }
 
   valueChanged(newValue: string) {
-    if (this.selectedUnit) {
-      this.controller.AddDirt(this.selectedUnit.baseUnit);
+    if (this.currentUnit) {
+      this.controller.AddDirt(this.currentUnit.baseUnit);
     }
   }
 
   RemoveMetadata(id: string | undefined) {
-    if (this.selectedUnit !== undefined && id !== undefined) {
-      const unit = this.selectedUnit.baseUnit as BaseUnit;
-      
+    if (this.currentUnit !== undefined && id !== undefined) {
+      const unit = this.currentUnit.baseUnit as BaseUnit;
+
       unit.metadata = unit.metadata?.filter(metaData => metaData.id !== id);
-      unit.dirty = true;      
+      unit.dirty = true;
+      this.controller.DirtyCheck();
       this.buildGroup();
     }
   }
 
   buildGroup() {
     this.groupedMetadata = {};
-    if (this.selectedUnit && this.concretion?.allowedMetadataTypes) {
-      const unit = this.selectedUnit.baseUnit as BaseUnit;
-      
-      this.concretion?.allowedMetadataTypes.forEach(mt => this.groupedMetadata[mt] = []);
+    if (this.currentUnit && this.currentConcretion?.allowedMetadataTypes) {
+      const unit = this.currentUnit.baseUnit as BaseUnit;
+
+      this.currentConcretion?.allowedMetadataTypes.forEach(mt => this.groupedMetadata[mt] = []);
       if (unit.metadata) {
         unit.metadata.forEach(m => this.groupedMetadata[m.type].push(m));
       }

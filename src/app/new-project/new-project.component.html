@@ -1,21 +1,46 @@
 <form>
-    <div class="mb-3">
-        <label for="projectNameInput" class="form-label">Project Name</label>
-        <input  [(ngModel)]="newName" class="form-control" name="projectNameInput" id="projectNameInput" aria-describedby="projectNameHelp">
-        <div id="projectNameHelp" class="form-text">Enter the name of your project</div>
+  <div class="mb-3">
+    <label for="projectNameInput" class="form-label">Project Name</label>
+    <input
+      [(ngModel)]="newName"
+      class="form-control"
+      name="projectNameInput"
+      id="projectNameInput"
+      aria-describedby="projectNameHelp"
+    />
+    <div id="projectNameHelp" class="form-text">
+      Enter the name of your project
     </div>
-    <div class="mb-3">
-        <label for="projectTypeInput" class="form-label">Project Type</label>
-        <select class="form-select" name="projectTypeInput" id="projectTypeInput" size="3" aria-label="size 3 select example"  [(ngModel)]="selectedConcretion">
-            <option *ngFor="let concretion of concretions" [ngValue]="concretion" >{{concretion.name}}</option>
-        </select>
-    </div>
-    <div class="mb-3 form-check">
-        
-        <input type="checkbox" class="form-check-input" name="fakeStructureCheck" id="fakeStructureCheck"
-            [(ngModel)]="generateFakeStructure"
-            [ngModelOptions]="{standalone: true}">
-        <label class="form-check-label" for="fakeStructureCheck">Generate Fake structure</label>
-    </div>
-    <button type="submit" class="btn btn-primary" (click)="CreateProject()">Submit</button>
+  </div>
+  <div class="mb-3">
+    <label for="projectTypeInput" class="form-label">Project Type</label>
+    <select
+      class="form-select"
+      name="projectTypeInput"
+      id="projectTypeInput"
+      size="3"
+      aria-label="size 3 select example"
+      [(ngModel)]="selectedConcretion"
+    >
+      <option *ngFor="let concretion of concretions" [ngValue]="concretion">
+        {{ concretion.name }}
+      </option>
+    </select>
+  </div>
+  <div class="mb-3 form-check">
+    <input
+      type="checkbox"
+      class="form-check-input"
+      name="fakeStructureCheck"
+      id="fakeStructureCheck"
+      [(ngModel)]="generateFakeStructure"
+      [ngModelOptions]="{ standalone: true }"
+    />
+    <label class="form-check-label" for="fakeStructureCheck"
+      >Generate Fake structure</label
+    >
+  </div>
+  <button type="submit" class="btn btn-primary" (click)="CreateProject()">
+    Submit
+  </button>
 </form>

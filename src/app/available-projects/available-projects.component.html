@@ -1,22 +1,96 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-2">
-            <div *ngIf="projects.length > 0; else noProject" class="card" style="width: 18rem;">
-                <div class="card-header">
-                  Projects
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li *ngFor="let p of projects" class="list-group-item d-grid">
-                    <button type="button" (click)="SelectProject(p)"                         
-                        class="btn-sm btn">{{p.name}}</button>  
+  <div class="row">
+    <div class="col-md-4">
+      <div role="alert" class="alert alert-info">All Projects</div>
 
-                  </li>
-                </ul> 
-              </div>
-        </div>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Project</th>
+            <th scope="col">Last Save Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let r of rows"
+            [ngClass]="{ 'table-success': r.current === true }"
+          >
+            <td>{{ r.metadata.name }}</td>
+            <td>{{ r.saveDate }}</td>
+            <td *ngIf="r.current === false">
+              <button
+                type="button"
+                (click)="OpenProject(r.metadata)"
+                class="btn-sm btn btn-primary"
+              >
+                Open
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-</div>
 
-<ng-template #noProject>
-    <h6> No project selected or found</h6>
-</ng-template>
+    <div class="col-md-4">
+      <div role="alert" class="alert alert-warning">Create New Project</div>
+      <app-new-project></app-new-project>
+      <button
+        (click)="FromClipboard()"
+        class="m-3 btn btn-outline-success mx-2"
+      >
+        Import project from clipboard
+      </button>
+    </div>
+
+    <div class="col-md-4">
+      <div role="alert" class="alert alert-success">Existing Project</div>
+      <h3>{{ currentProject?.project?.name || "No current project" }}</h3>
+
+      <form *ngIf="currentProject">
+        <div class="mb-3">
+          <label for="projectNameInput" class="form-label">Project Name</label>
+          <input
+            [(ngModel)]="newName"
+            class="form-control"
+            name="projectNameInput"
+            id="projectNameInput"
+            aria-describedby="projectNameHelp"
+          />
+          <div id="projectNameHelp" class="form-text">
+            Enter the name of your project
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="projectTypeInput" class="form-label">Project Type</label>
+          <select
+            class="form-select"
+            name="projectTypeInput"
+            id="projectTypeInput"
+            size="3"
+            aria-label="size 3 select example"
+            [(ngModel)]="selectedConcretion"
+          >
+            <option
+              *ngFor="let concretion of concretions"
+              [ngValue]="concretion"
+            >
+              {{ concretion.name }}
+            </option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" (click)="Save()">
+          Save
+        </button>
+      </form>
+
+      <button
+        (click)="ToClipboard()"
+        class="btn btn-outline-success m-2"
+        *ngIf="currentProject"
+      >
+        Export project to clipboard
+      </button>
+    </div>
+  </div>
+</div>

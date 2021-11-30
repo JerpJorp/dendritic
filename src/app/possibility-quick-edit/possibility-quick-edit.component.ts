@@ -15,15 +15,17 @@ export class PossibilityQuickEditComponent extends BaseQuickEditComponent implem
   tempActionName = '';
   possibility: Possibility | undefined;
 
-  constructor(controller: DendriticControllerService) { 
+  constructor(controller: DendriticControllerService) {
     super(controller);
   };
 
-  ngOnInit(): void {
-    this.controller.currentUnit$.pipe(filter(x => x?.type === 'possibility')).subscribe(x => {
-      this.possibility = x?.baseUnit as Possibility
-    });
+  onCurrentUnitDelta() {
+    if (this.currentUnit?.type === 'possibility') {
+      this.possibility = this.currentUnit?.baseUnit as Possibility;
+    }
+  }
 
+  ngOnInit(): void {
     this.changeDebounce.pipe(debounceTime(300)).subscribe(x => this.controller.AddDirt(this.possibility as Possibility));
   }
 
@@ -33,7 +35,6 @@ export class PossibilityQuickEditComponent extends BaseQuickEditComponent implem
 
   nameValueChanged(newValue: string) {
     this.changeDebounce.next();
-    // add dirt?
   }
 
   AddAction() {

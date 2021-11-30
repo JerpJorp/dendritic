@@ -8,26 +8,34 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
 @Component({
   selector: 'app-situation-quick-edit',
   templateUrl: './situation-quick-edit.component.html',
-  styleUrls: ['./situation-quick-edit.component.scss']
+  styleUrls: ['./situation-quick-edit.component.scss'],
 })
-export class SituationQuickEditComponent extends BaseQuickEditComponent implements OnInit {
-
+export class SituationQuickEditComponent
+  extends BaseQuickEditComponent
+  implements OnInit
+{
   situation: Situation | undefined;
   possibilities: Possibility[] = [];
   tempPossibilityName = '';
-  ;
-
-  constructor(controller: DendriticControllerService) { 
+  constructor(controller: DendriticControllerService) {
     super(controller);
   }
 
-  ngOnInit(): void {
-    this.controller.currentUnit$.pipe(filter(x => x?.type === 'situation')).subscribe(x => {
-      this.situation = x?.baseUnit as Situation;     
-      this.possibilities = this.situation ? this.controller.PossibilitiesFor(this.situation) : [];
-    });
+  onCurrentUnitDelta() {
+    if (this.currentUnit?.type === 'situation') {
+      this.situation = this.currentUnit?.baseUnit as Situation;
+      setTimeout(() => {
+        this.possibilities = this.situation
+          ? this.controller.PossibilitiesFor(this.situation)
+          : [];
+      }, 0);
+    }
+  }
 
-    this.changeDebounce.pipe(debounceTime(300)).subscribe(x => this.controller.AddDirt(this.situation as Situation));
+  ngOnInit(): void {
+    this.changeDebounce
+      .pipe(debounceTime(300))
+      .subscribe((x) => this.controller.AddDirt(this.situation as Situation));
   }
 
   Select(p: Possibility) {
@@ -39,12 +47,14 @@ export class SituationQuickEditComponent extends BaseQuickEditComponent implemen
   }
 
   AddPossibility() {
-    this.controller.AddPossibility(this.situation as Situation, this.tempPossibilityName);
+    this.controller.AddPossibility(
+      this.situation as Situation,
+      this.tempPossibilityName
+    );
     this.tempPossibilityName = '';
   }
 
   RemovePossibility(p: Possibility) {
     this.controller.RemovePossibility(this.situation as Situation, p);
   }
-
 }

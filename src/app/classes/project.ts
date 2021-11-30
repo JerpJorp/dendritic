@@ -1,21 +1,22 @@
-import { Action } from "./action";
 import { Common } from "./common";
+
 import { Possibility } from "./possibility";
 import { Situation } from "./situation";
 
 export class Project {
+
     id = '';
     name = '';
     concretion = '';
     situations: Situation[] = [];
     possibilities: Possibility[] = [];
-    origin: 'default' | 'custom';
+
+    saveDate: number | undefined;
 
     dirty = false;
 
     constructor(dto?: any) {
         this.id = dto && dto.id ? dto.id: Common.NewID();
-        this.origin = dto && dto.origin ? dto.origin: 'custom';
         this.dirty = dto && dto.dirty ? dto.dirty: false;
         this.name = dto && dto.name ? dto.name : 'NEW PROJECT';
         this.concretion = dto && dto.concretion ? dto.concretion : 'code';
@@ -28,15 +29,17 @@ export class Project {
         this.situations.forEach(s => s.Clean())
         this.possibilities.forEach(p => p.Clean());
     }
+
+    NewId() {
+      this.id = Common.NewID();
+    }
 }
 
-export class ProjectTrack {
-    
-    constructor(
-        public name: string, 
-        public id: string, 
-        public source: 'default' | 'unsaved' | 'indexedDb' | 'fireStore' ) {
+// repository tracked information about project
+export class ProjectMetadata {
+  constructor(public name: string, public id: string, public saveDate: number) { }
+}
 
-    }
-
+export class ProjectInstance {
+  constructor(public metadata: ProjectMetadata, public project: Project) {}
 }

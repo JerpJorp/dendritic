@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseQuickEditComponent } from '../base-quick-edit/base-quick-edit.component';
 import { Project } from '../classes/project';
 import { Situation } from '../classes/situation';
@@ -9,8 +9,8 @@ import { DendriticControllerService } from '../services/dendritic-controller.ser
   templateUrl: './project-quick-edit.component.html',
   styleUrls: ['./project-quick-edit.component.scss']
 })
-export class ProjectQuickEditComponent extends BaseQuickEditComponent implements OnInit {
-                  
+export class ProjectQuickEditComponent extends BaseQuickEditComponent {
+
   project: Project | undefined;
   tempSituationName = '';
 
@@ -19,12 +19,9 @@ export class ProjectQuickEditComponent extends BaseQuickEditComponent implements
     super(controller);
    };
 
-  ngOnInit(): void {
-
-    this.controller.currentProject$.subscribe(x => {
-      this.project = x;
-      this.situations = this.project ? this.project.situations.filter(x => x.initial) : undefined;
-    });
+  onCurrentProjectDelta() {
+    this.project =  this.currentProject?.project;
+    this.situations = this.project ? this.project.situations.filter(x => x.initial) : undefined;
   }
 
   Select(s: Situation) {

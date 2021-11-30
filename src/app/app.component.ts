@@ -1,21 +1,19 @@
-import { Component, OnDestroy, OnInit, Optional } from '@angular/core';
-import { EMPTY, Observable, Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Auth, authState, signOut, User, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
-import { traceUntilFirst } from '@angular/fire/performance';
+import { User } from '@angular/fire/auth';
 
+import { NotificationsService } from './services/notifications.service';
 import { DendriticControllerService } from './services/dendritic-controller.service';
+import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy{
-  
-  private readonly userDisposable: Subscription|undefined;
-  public readonly user: Observable<User | null> = EMPTY;
-
+export class AppComponent implements OnInit, OnDestroy {
+  user: User | null = null;
   dirtyObjectCount = 0;
   showLoginButton = false;
   showLogoutButton = false;
@@ -24,52 +22,55 @@ export class AppComponent implements OnInit, OnDestroy{
   readOnly = false;
   ready = false;
 
-  constructor(@Optional() private auth: Auth, private controller: DendriticControllerService) {
-    if (auth) {
-      this.user = authState(this.auth);
-      this.userDisposable = authState(this.auth).pipe(
-        traceUntilFirst('auth'),
-        
-      ).subscribe(user => {        
-        const isLoggedIn = user !== null;
-        this.showLoginButton = !isLoggedIn;
-        this.showLogoutButton = isLoggedIn;
-      });
-    }
+  constructor(
+    private auth: AuthService,
+    private controller: DendriticControllerService,
+    private notification: NotificationsService,
+    private router: Router
+  ) {
+    this.auth.user$.subscribe((x) => {
+      this.user = x;
+      this.showLoginButton = this.user === null;
+      this.showLogoutButton = !this.showLoginButton;
+    });
   }
 
   ngOnInit() {
-    this.controller.dirtyObjectCount$.subscribe(x => this.dirtyObjectCount = x);
-    this.controller.currentProject$.subscribe(x => {
+    this.controller.dirtyObjectCount$.subscribe(
+      (x) => (this.dirtyObjectCount = x)
+    );
+    this.controller.currentProject$.subscribe((x) => {
       setTimeout(() => {
-        this.projectName = x ? x.name : '';
-        console.log(this.projectName);        
-      }, 0);      
+        this.projectName = x ? x.project.name : '';
+      }, 0);
     });
 
-    this.controller.readonly$.subscribe(x => this.readOnly = x)
-    this.controller.Initialized$.subscribe(x => this.ready = x);
+    this.controller.readonly$.subscribe(
+      (readonly) => (this.readOnly = readonly)
+    );
+    this.controller.projects$.subscribe(
+      (metadataList) => (this.ready = metadataList !== undefined)
+    );
+  }
+
+  ViewProject() {
+    const id = this.controller.currentProject$.value?.project.id;
+
+    if (id) {
+      this.router.navigate(['/view', id]);
+    }
   }
 
   ToggleReadOnly() {
     this.controller.readonly$.next(!this.controller.readonly$.value);
   }
 
-  log(msg: string) {
-    console.log(msg);
-  }
-  ngOnDestroy() {
-    if (this.userDisposable) {
-      this.userDisposable.unsubscribe();
-    }
-  }
+  ngOnDestroy() {}
 
-  async login() {
-    return await signInWithPopup(this.auth, new GoogleAuthProvider());
+  login() {
+    this.auth.Login();
   }
-  
-  async logout() {
-    return await signOut(this.auth);
+  logout() {
+    this.auth.Logout();
   }
-  
 }

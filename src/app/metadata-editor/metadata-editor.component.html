@@ -1,22 +1,22 @@
-<!-- 
+<!--
     selectedUnit: SelectedUnit | undefined;
     selectedUnit.baseUnit
 
     allowedMetaDataTypes: MetadataType[] | undefined;
         export type MetadataType = 'link' | 'comment' | 'code' | 'table'; -->
 
-<div *ngIf="selectedUnit && concretion?.allowedMetadataTypes">
+<div *ngIf="currentUnit && currentConcretion?.allowedMetadataTypes">
 
-    <div 
-    [ngClass]="{'alert-info': selectedUnit.type === 'situation' && readOnly, 'alert-success': selectedUnit.type === 'possibility' && readOnly, 'alert-danger': selectedUnit.type === 'action' && readOnly, 'alert-dark': !readOnly}"
+    <div
+    [ngClass]="{'alert-info': currentUnit.type === 'situation' && readOnly, 'alert-success': currentUnit.type === 'possibility' && readOnly, 'alert-danger': currentUnit.type === 'action' && readOnly, 'alert-dark': !readOnly}"
     class="alert" role="alert">Information</div>
 
-    <h6 class="card-title">Details for {{selectedUnit?.baseUnit?.name}}</h6>
+    <h6 class="card-title">Details for {{currentUnit?.baseUnit?.name}}</h6>
 
     <div *ngIf="!readOnly">
 
-        <div *ngFor="let mt of concretion?.allowedMetadataTypes" class="card">
-            <div class="card-body"> 
+        <div *ngFor="let mt of currentConcretion?.allowedMetadataTypes" class="card">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="card-header">{{mt}}</div>
@@ -51,10 +51,10 @@
     </div>
 
     <div *ngIf="readOnly">
-        <div  *ngFor="let mt of concretion?.allowedMetadataTypes" class="card">
+        <div  *ngFor="let mt of currentConcretion?.allowedMetadataTypes" class="card">
             <div class="card-body">
                 <div class="card-header" *ngIf="groupedMetadata[mt]">{{mt}}</div>
-                
+
                 <ul class="list-group">
                     <li class="list-group-item" *ngFor="let m of groupedMetadata[mt]">
                         <span *ngIf="mt === 'comment'">{{m.content}}</span>
@@ -66,7 +66,7 @@
                         <a  *ngIf="mt === 'link'" class="mx-2" href="{{m.content}}">{{m.content}}</a>
 
                     </li>
-    
+
                 </ul>
             </div>
         </div>

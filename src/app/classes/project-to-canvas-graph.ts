@@ -33,6 +33,7 @@ export class ProjectToCanvasGraph {
                     const p = s.endNode.AddLinkTo(this.LinkFactory('--'), this.newNode(possibility, 'possibility', s.endNode.node));
                     possibility.actions.forEach(action => {
                         const s = p.endNode.AddLinkTo(this.LinkFactory('--'), this.newNode(action, 'action', p.endNode.node)); 
+                        this.seenActionNodes.push({id: action.id, node: s.endNode.node})
                         this.addActionConditions(builder, action, s.endNode);
                     });
                 });
@@ -51,7 +52,7 @@ export class ProjectToCanvasGraph {
                 const existing = this.seenActionNodes.find(x => x.id === targetAction.id);
                 
                 if (existing) {
-                    const tabn = actionBuiltNode.AddLinkTo(this.LinkFactory(condition.name, '#767676'), existing.node);
+                    const tabn = actionBuiltNode.AddLinkTo(this.LinkFactory(condition.name, '#555555'), existing.node);
                     
                 } else {
                     const tabn = actionBuiltNode.AddLinkTo(this.LinkFactory(condition.name), this.newNode(targetAction, 'action', actionBuiltNode.node));

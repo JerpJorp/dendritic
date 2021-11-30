@@ -1,55 +1,76 @@
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
   <div class="container-fluid">
-    <a class="navbar-brand" href="javascript:void(0)">Dendritic
+    <a class="navbar-brand me-1" [routerLink]="['/available']">Dendritic</a>
 
-      <span *ngIf="projectName"> - {{projectName}}</span>
+    <a *ngIf="projectName" class="navbar-brand" (click)="ViewProject()">
+      <span> - {{ projectName }}</span>
     </a>
 
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
       <ul class="navbar-nav mx-3 mb-2 mb-lg-0">
-        
         <li *ngIf="dirtyObjectCount > 0" class="nav-item">
           <a class="nav-link" [routerLink]="['/repository']">Save Changes</a>
         </li>
-          <li><a class="nav-link" [routerLink]="['/available']">Available Projects</a></li>
-          <li><a class="nav-link" [routerLink]="['/view', 'DefaultEDF']">View Example Project</a></li>
-          <li><a class="nav-link" [routerLink]="['/new']">New Project</a></li>
-        
-        
+        <li><a class="nav-link" [routerLink]="['/available']">Projects</a></li>
       </ul>
 
       <div class="d-flex me-auto">
         <div class="form-check form-switch">
-          <input class="form-check-input " type="checkbox" id="readOnlyChecked" [checked]="readOnly"
-            (change)="ToggleReadOnly()">
-          <label class="form-check-label" for="readOnlyChecked">Read Only</label>
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="readOnlyChecked"
+            [checked]="readOnly"
+            (change)="ToggleReadOnly()"
+          />
+          <label class="form-check-label" for="readOnlyChecked"
+            >Read Only</label
+          >
         </div>
       </div>
 
       <div class="d-flex">
-
-        <img *ngIf="(user | async)?.photoURL" referrerpolicy="no-referrer" [src]="(user | async)?.photoURL"
-          class="user ">
-        <button (click)="login()" class="btn btn-outline-success mx-2" *ngIf="showLoginButton">Sign In</button>
-        <button (click)="logout()" class="btn btn-outline-success mx-2" *ngIf="showLogoutButton">Sign Out</button>
-
-        <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button  class="btn btn-outline-success">Search</button> -->
+        <img
+          *ngIf="user?.photoURL"
+          referrerpolicy="no-referrer"
+          [src]="user?.photoURL"
+          class="user"
+        />
+        <button
+          (click)="login()"
+          class="btn btn-outline-success mx-2"
+          *ngIf="showLoginButton"
+        >
+          Sign In
+        </button>
+        <button
+          (click)="logout()"
+          class="btn btn-outline-success mx-2"
+          *ngIf="showLogoutButton"
+        >
+          Sign Out
+        </button>
       </div>
     </div>
   </div>
 </nav>
 
-
 <router-outlet *ngIf="ready"></router-outlet>
 
-<!-- 
+<h6 *ngIf="!ready">Initializing...</h6>
+
+<!--
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
@@ -59,9 +80,9 @@
           <img *ngIf="(user | async)?.photoURL" [src]="(user | async)?.photoURL" class="user ">
           <button (click)="login()" class="btn btn-outline-success mx-2"  *ngIf="showLoginButton">Sign In</button>
           <button (click)="logout()" class="btn btn-outline-success mx-2" *ngIf="showLogoutButton">Sign Out</button>
-          
 
-        </div> 
+
+        </div>
       </nav>
     </div>
   </div>
